@@ -36,8 +36,9 @@
         <div>
           <label class="block text-xs text-slate-300 mb-1">رمز عبور:</label>
           <div class="relative">
-            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark pr-10 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <!-- پدینگ چپ و راست متناسب برای جلوگیری از تداخل متن با آیکون چشم -->
+            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark pl-10 pr-4 text-left" dir="ltr">
+            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
           </div>
         </div>
         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-sm">
@@ -61,7 +62,7 @@
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1">نام و نام خانوادگی مدیر کل:</label>
-          <input type="text" id="reg-name" placeholder="فرشاد مجید" required class="input-dark">
+          <input type="text" id="reg-name" value="فرشاد مجیدی" required class="input-dark">
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1">شماره همراه:</label>
@@ -74,8 +75,8 @@
         <div>
           <label class="block text-xs text-slate-300 mb-1">رمز عبور امن:</label>
           <div class="relative">
-            <input type="password" id="reg-pass" placeholder="Admin@123" required oninput="validatePasswordRules(this.value)" class="input-dark pr-10 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <input type="password" id="reg-pass" placeholder="Admin@123" required oninput="validatePasswordRules(this.value)" class="input-dark pl-10 pr-4 text-left" dir="ltr">
+            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
           </div>
           <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-[11px] space-y-1 mt-2">
             <div id="rule-len" class="text-red-400">✕ حداقل ۸ کاراکتر</div>
@@ -101,7 +102,10 @@
             ✉️ کد تایید ارسال شد (تست: <span class="font-bold">1234</span>)
           </div>
           <input type="text" id="forgot-code" placeholder="کد تایید ۴ رقمی" class="input-dark text-center font-mono" dir="ltr">
-          <input type="password" id="forgot-newpass" placeholder="رمز عبور جدید" class="input-dark pr-10 text-left" dir="ltr">
+          <div class="relative">
+            <input type="password" id="forgot-newpass" placeholder="رمز عبور جدید" class="input-dark pl-10 pr-4 text-left" dir="ltr">
+            <button type="button" onclick="togglePassword('forgot-newpass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+          </div>
         </div>
         <button type="submit" id="forgot-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
           دریافت کد بازیابی
@@ -141,7 +145,7 @@
           <span class="text-[10px] text-cyan-300 font-mono font-bold" id="live-datetime">در حال بارگذاری زمان...</span>
         </div>
         <div class="bg-[#0b132b] p-3.5 rounded-xl border border-slate-800 space-y-1">
-          <h2 id="profile-name" class="font-bold text-white text-sm">فرشاد مجید</h2>
+          <h2 id="profile-name" class="font-bold text-white text-sm">فرشاد مجیدی</h2>
           <p id="profile-meta" class="text-xs text-slate-300 font-mono">آیدی: ADMIN-888 | 09914912575</p>
           <p class="text-[11px] text-cyan-400" id="profile-pharmacy">کالاپزشکی / داروخانه</p>
         </div>
@@ -242,8 +246,8 @@
           <input type="text" id="staff-name" placeholder="نام پرسنل" class="input-dark mb-2">
           <input type="text" id="staff-id" placeholder="آیدی پرسنلی (مثال: STAFF-02)" class="input-dark mb-2 font-mono" dir="ltr">
           <div class="relative mb-2">
-            <input type="password" id="staff-pass" placeholder="رمز عبور پرسنل" class="input-dark pr-10 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('staff-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <input type="password" id="staff-pass" placeholder="رمز عبور پرسنل" class="input-dark pl-10 pr-4 text-left" dir="ltr">
+            <button type="button" onclick="togglePassword('staff-pass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
           </div>
           <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب پرسنل</button>
         </div>
@@ -255,7 +259,7 @@
     </div>
   </div>
 
-  <!-- ================= مودال ثبت و مدیریت کالا (با دکمه‌های کامل عملیاتی) ================= -->
+  <!-- ================= مودال ثبت و مدیریت کالا ================= -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -329,13 +333,13 @@
           </div>
         </div>
 
-        <!-- دکمه‌های کامل عملیاتی دقیقاً مشابه تصویر شما -->
+        <!-- دکمه‌های کامل عملیاتی -->
         <div class="grid grid-cols-2 gap-2 pt-3">
           <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➕ ثبت ورود کالا</button>
           <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➖ ثبت خروج / فروش</button>
         </div>
         <div class="grid grid-cols-2 gap-2 pt-1">
-          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">🗑️ ثبت ضایعات</button>
+          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">🗑️️ ثبت ضایعات</button>
           <button onclick="submitItem('return')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">↩️ ثبت مرجوعی</button>
         </div>
       </div>
@@ -347,7 +351,6 @@
     let pharmacyData = { name: "کالاپزشکی صبوری", items: [], txs: [], staff: [] };
     let html5QrcodeScanner = null;
 
-    // دیتابیس جامع بارکدها (مرکز داده برای شناسایی اتوماتیک اقلام با بارکد)
     const globalBarcodeDB = {
       "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1" },
       "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2" },
@@ -355,7 +358,7 @@
     };
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v9');
+      const saved = localStorage.getItem('pharma_pro_db_v10');
       if (saved) {
         try { pharmacyData = JSON.parse(saved); } catch(e){}
       }
@@ -375,7 +378,7 @@
     }
 
     function saveDB() {
-      localStorage.setItem('pharma_pro_db_v9', JSON.stringify(pharmacyData));
+      localStorage.setItem('pharma_pro_db_v10', JSON.stringify(pharmacyData));
     }
 
     function switchAuthView(v) {
@@ -426,7 +429,7 @@
 
       pharmacyData.staff.push(newAdmin);
       saveDB();
-      alert('ثبت‌نام با موفقیت انجام شد. وارد صفحه ورود شوید.');
+      alert('ثبت‌‌نام با موفقیت انجام شد. وارد صفحه ورود شوید.');
       switchAuthView('login');
     }
 
@@ -434,7 +437,7 @@
       e.preventDefault();
       const id = document.getElementById('login-id').value.trim();
       let found = pharmacyData.staff.find(s => s.userid === id);
-      currentUser = found ? found : { name: 'فرشاد مجید', phone: '09914912575', role: 'مدیر کل / مسئول فنی', userid: id || 'ADMIN-888' };
+      currentUser = found ? found : { name: 'فرشاد مجیدی', phone: '09914912575', role: 'مدیر کل / مسئول فنی', userid: id || 'ADMIN-888' };
       openApp();
     }
 
@@ -484,10 +487,9 @@
       document.getElementById('alert-min').innerText = minAlerts;
     }
 
-    // استخراج هوشمند بارکد و تطبیق خودکار با دیتابیس جامع بارکدها و انبار
     function parseGS1(raw) {
       if (!raw || raw.length < 8) return;
-      let gtin = raw, exp = '', batch = '', mfg = '';
+      let gtin = raw, exp = '', batch = '';
       
       if (raw.includes('01') && raw.includes('17')) {
         const gMatch = raw.match(/01(\d{14})/);
@@ -503,7 +505,6 @@
 
       document.getElementById('m-gtin').value = gtin;
 
-      // ۱. ابتدا جستجو در دیتابیس جامع مرکزی بارکدها
       if (globalBarcodeDB[gtin]) {
         let info = globalBarcodeDB[gtin];
         document.getElementById('m-name').value = info.name;
@@ -515,7 +516,6 @@
         return;
       }
 
-      // ۲. ثانیاً جستجو در سابقه موجودی انبار خودِ کاربر
       let foundInInv = pharmacyData.items.find(i => i.gtin === gtin);
       if (foundInInv) {
         document.getElementById('m-name').value = foundInInv.name;
@@ -531,7 +531,6 @@
         return;
       }
 
-      // اگر در هیچ‌کدام نبود
       if (exp) document.getElementById('m-exp').value = exp;
       if (batch) document.getElementById('m-batch').value = batch;
     }
