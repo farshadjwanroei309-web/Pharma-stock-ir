@@ -13,7 +13,6 @@
     .glass-card { background: #1c2541; border: 1px solid #2a3a5e; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .input-dark { background: #0b132b; border: 1px solid #3a506b; color: #ffffff; border-radius: 0.75rem; padding: 0.6rem 0.8rem; width: 100%; outline: none; font-size: 0.85rem; }
     .input-dark:focus { border-color: #48cae4; box-shadow: 0 0 10px rgba(72, 202, 228, 0.2); }
-    /* استایل آیکون چشم استاندارد و کمرنگ */
     .eye-btn { opacity: 0.5; transition: opacity 0.2s; background: none; border: none; cursor: pointer; }
     .eye-btn:hover { opacity: 0.9; }
   </style>
@@ -56,7 +55,7 @@
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
         <div class="text-center pb-1">
           <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">بدون نیاز به فیلترشکن</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">کنترل یکتا بودن شماره همراه و آیدی</p>
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1">نام داروخانه / کالاپزشکی:</label>
@@ -67,11 +66,11 @@
           <input type="text" id="reg-name" value="فرشاد مجیدی" required class="input-dark">
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">شماره همراه:</label>
+          <label class="block text-xs text-slate-300 mb-1">شماره همراه (یکتا):</label>
           <input type="tel" id="reg-phone" placeholder="09914912575" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">تعیین آیدی پرسنلی اختصاصی مدیر:</label>
+          <label class="block text-xs text-slate-300 mb-1">تعیین آیدی پرسنلی اختصاصی (یکتا):</label>
           <input type="text" id="reg-userid" placeholder="ADMIN-888" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
@@ -195,7 +194,7 @@
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-          <button onclick="openModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
+          <button onclick="openCameraModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
             <span>📷</span> شروع اسکن با دوربین اصلی
           </button>
           <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow">
@@ -264,12 +263,13 @@
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
-      <!-- کادر پیش‌نمایش عکس گالری با سایز کنترل‌شده و استاندارد -->
+      <!-- کادر پیش‌نمایش عکس گالری با سایز کنترل‌شده و کاملاً تفکیک‌شده از دوربین -->
       <div id="gallery-preview-container" class="hidden text-center bg-black/40 p-2 rounded-xl border border-slate-800">
         <p class="text-[10px] text-cyan-400 mb-1">تصویر بارکد انتخاب شده:</p>
         <img id="previewImage" class="max-h-36 mx-auto rounded-lg object-contain border border-slate-700">
       </div>
 
+      <!-- کادر دوربین که هنگام آپلود عکس کاملاً مخفی می‌شود تا جای خالی سیاهی نیندازد -->
       <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black">
         <div id="reader" class="w-full"></div>
       </div>
@@ -360,7 +360,7 @@
     };
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v10');
+      const saved = localStorage.getItem('pharma_pro_db_v11');
       if (saved) {
         try { pharmacyData = JSON.parse(saved); } catch(e){}
       }
@@ -390,7 +390,7 @@
     }
 
     function saveDB() {
-      localStorage.setItem('pharma_pro_db_v10', JSON.stringify(pharmacyData));
+      localStorage.setItem('pharma_pro_db_v11', JSON.stringify(pharmacyData));
     }
 
     function switchAuthView(v) {
@@ -402,12 +402,11 @@
       else if (v === 'forgot') document.getElementById('form-forgot').classList.remove('hidden');
     }
 
-    // تغییر وضعیت رمز عبور با آیکون چشم استاندارد
     function togglePassword(id, btn) {
       const inp = document.getElementById(id);
       if (inp.type === 'password') {
         inp.type = 'text';
-        btn.textContent = '👁️‍🗨️'; // چشم باز با خط یا حالت فعال
+        btn.textContent = '👁️‍🗨️';
       } else {
         inp.type = 'password';
         btn.textContent = '👁️';
@@ -427,19 +426,26 @@
       el.innerText = (ok ? '✓ ' : '✕ ') + text;
     }
 
+    // بررسی یکتا بودن شماره همراه و آیدی پرسنلی در ثبت‌نام
     function handleRegister(e) {
       e.preventDefault();
       const userid = document.getElementById('reg-userid').value.trim();
-      
+      const phone = document.getElementById('reg-phone').value.trim();
+
       if (pharmacyData.staff.some(s => s.userid === userid)) {
-        alert('خطا: این آیدی پرسنلی قبلاً ثبت شده است!');
+        alert('❌ خطا: این آیدی پرسنلی قبلاً در سیستم ثبت شده است. لطفاً آیدی دیگری انتخاب کنید.');
+        return;
+      }
+
+      if (pharmacyData.staff.some(s => s.phone === phone)) {
+        alert('❌ خطا: این شماره همراه قبلاً برای ثبت‌‌نام استفاده شده است. هر شماره تنها یک بار اجازه ثبت‌نام دارد.');
         return;
       }
 
       pharmacyData.name = document.getElementById('reg-pname').value;
       const newAdmin = {
         name: document.getElementById('reg-name').value,
-        phone: document.getElementById('reg-phone').value,
+        phone: phone,
         role: 'مدیر کل / مسئول فنی',
         userid: userid,
         pass: document.getElementById('reg-pass').value
@@ -447,7 +453,7 @@
 
       pharmacyData.staff.push(newAdmin);
       saveDB();
-      alert('ثبت‌‌نام با موفقیت انجام شد. وارد صفحه ورود شوید.');
+      alert('✅ ثبت‌نام با موفقیت انجام شد. اکنون وارد شوید.');
       switchAuthView('login');
     }
 
@@ -561,7 +567,6 @@
       if (batch) document.getElementById('m-batch').value = batch;
     }
 
-    // پاکسازی کامل فرم و فیلدها پیش از اسکن یا آپلود جدید
     function clearModalForm() {
       document.getElementById('m-gtin').value = '';
       document.getElementById('m-name').value = '';
@@ -580,10 +585,12 @@
       const file = e.target.files[0];
       if (!file) return;
 
-      // ابتدا پاکسازی فیلدهای قبلی
       clearModalForm();
 
-      // نمایش عکس در کادر کنترل‌شده کوچک‌تر
+      // پنهان کردن کادر دوربین تا هیچ کادر سیاه بزرگی ایجاد نشود
+      document.getElementById('cam-box').classList.add('hidden');
+
+      // نمایش عکس در کادر کنترل‌شده کوچک بالا
       const reader = new FileReader();
       reader.onload = function(evt) {
         document.getElementById('previewImage').src = evt.target.result;
@@ -591,7 +598,6 @@
       };
       reader.readAsDataURL(file);
 
-      // باز کردن مودال
       document.getElementById('item-modal').classList.remove('hidden');
 
       const html5QrCode = new Html5Qrcode("reader");
@@ -604,8 +610,10 @@
         });
     }
 
-    function openModal() {
+    function openCameraModal() {
       clearModalForm();
+      // نمایش کادر دوربین و مخفی کردن پیش‌نمایش گالری
+      document.getElementById('cam-box').classList.remove('hidden');
       document.getElementById('item-modal').classList.remove('hidden');
       startCameraScanner();
     }
