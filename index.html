@@ -36,9 +36,8 @@
         <div>
           <label class="block text-xs text-slate-300 mb-1">رمز عبور:</label>
           <div class="relative">
-            <!-- پدینگ چپ و راست متناسب برای جلوگیری از تداخل متن با آیکون چشم -->
             <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
           </div>
         </div>
         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-sm">
@@ -76,7 +75,7 @@
           <label class="block text-xs text-slate-300 mb-1">رمز عبور امن:</label>
           <div class="relative">
             <input type="password" id="reg-pass" placeholder="Admin@123" required oninput="validatePasswordRules(this.value)" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
           </div>
           <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-[11px] space-y-1 mt-2">
             <div id="rule-len" class="text-red-400">✕ حداقل ۸ کاراکتر</div>
@@ -104,7 +103,7 @@
           <input type="text" id="forgot-code" placeholder="کد تایید ۴ رقمی" class="input-dark text-center font-mono" dir="ltr">
           <div class="relative">
             <input type="password" id="forgot-newpass" placeholder="رمز عبور جدید" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('forgot-newpass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <button type="button" onclick="togglePassword('forgot-newpass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
           </div>
         </div>
         <button type="submit" id="forgot-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
@@ -138,7 +137,6 @@
 
     <main class="flex-1 p-4 max-w-4xl w-full mx-auto space-y-4">
       
-      <!-- پنل اختصاصی مدیر کل با تاریخ و ساعت زنده اتوماتیک -->
       <div class="glass-card p-4 space-y-3 border-amber-500/30 bg-amber-500/5">
         <div class="flex justify-between items-center">
           <span class="text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-lg font-semibold">دسترسی ارشد</span>
@@ -151,7 +149,6 @@
         </div>
       </div>
 
-      <!-- ۳ کارت آماری اصلی -->
       <div class="grid grid-cols-3 gap-2.5">
         <div class="glass-card p-3 text-center space-y-1 border-cyan-500/30">
           <p class="text-[10px] text-slate-400">ارزش انبار</p>
@@ -167,7 +164,6 @@
         </div>
       </div>
 
-      <!-- وضعیت انقضا و کسری -->
       <div class="glass-card p-4 space-y-3">
         <div class="flex items-center gap-2 text-xs font-bold text-amber-400">
           <span>🔔</span> وضعیت انقضا و کسری
@@ -188,7 +184,6 @@
         </div>
       </div>
 
-      <!-- بخش اسکن هوشمند TTAC / GS1 -->
       <div class="glass-card p-5 text-center space-y-3 border-cyan-500/40">
         <div class="w-12 h-12 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-cyan-500/30">📷</div>
         <div class="space-y-1">
@@ -207,7 +202,6 @@
         </div>
       </div>
 
-      <!-- تب‌ها و موجودی انبار -->
       <div class="flex border-b border-slate-800 text-xs">
         <button id="tab-btn-inv" onclick="switchAppTab('inv')" class="py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400">📦 موجودی انبار</button>
         <button id="tab-btn-tx" onclick="switchAppTab('tx')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white">📑 تراکنش‌ها و اکسل</button>
@@ -247,7 +241,7 @@
           <input type="text" id="staff-id" placeholder="آیدی پرسنلی (مثال: STAFF-02)" class="input-dark mb-2 font-mono" dir="ltr">
           <div class="relative mb-2">
             <input type="password" id="staff-pass" placeholder="رمز عبور پرسنل" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('staff-pass', this)" class="absolute left-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+            <button type="button" onclick="togglePassword('staff-pass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
           </div>
           <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب پرسنل</button>
         </div>
@@ -333,13 +327,12 @@
           </div>
         </div>
 
-        <!-- دکمه‌های کامل عملیاتی -->
         <div class="grid grid-cols-2 gap-2 pt-3">
           <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➕ ثبت ورود کالا</button>
           <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➖ ثبت خروج / فروش</button>
         </div>
         <div class="grid grid-cols-2 gap-2 pt-1">
-          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">🗑️️ ثبت ضایعات</button>
+          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">🗑 ثبت ضایعات</button>
           <button onclick="submitItem('return')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">↩️ ثبت مرجوعی</button>
         </div>
       </div>
@@ -361,6 +354,16 @@
       const saved = localStorage.getItem('pharma_pro_db_v10');
       if (saved) {
         try { pharmacyData = JSON.parse(saved); } catch(e){}
+      }
+      if (!pharmacyData.staff.some(s => s.userid === 'ADMIN-888')) {
+        pharmacyData.staff.push({
+          name: "فرشاد مجیدی",
+          phone: "09914912575",
+          role: "مدیر کل / مسئول فنی",
+          userid: "ADMIN-888",
+          pass: "Admin@123"
+        });
+        saveDB();
       }
       startLiveClock();
     };
@@ -392,8 +395,13 @@
 
     function togglePassword(id, btn) {
       const inp = document.getElementById(id);
-      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-      else { inp.type = 'password'; btn.textContent = '👁️'; }
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.textContent = '🐒';
+      } else {
+        inp.type = 'password';
+        btn.textContent = '👁️';
+      }
     }
 
     function validatePasswordRules(v) {
@@ -413,7 +421,7 @@
       e.preventDefault();
       const userid = document.getElementById('reg-userid').value.trim();
       
-      if (pharmacyData.staff.some(s => s.userid === userid) || userid === 'ADMIN-888') {
+      if (pharmacyData.staff.some(s => s.userid === userid)) {
         alert('خطا: این آیدی پرسنلی قبلاً ثبت شده است!');
         return;
       }
@@ -436,8 +444,15 @@
     function handleLogin(e) {
       e.preventDefault();
       const id = document.getElementById('login-id').value.trim();
-      let found = pharmacyData.staff.find(s => s.userid === id);
-      currentUser = found ? found : { name: 'فرشاد مجیدی', phone: '09914912575', role: 'مدیر کل / مسئول فنی', userid: id || 'ADMIN-888' };
+      const pass = document.getElementById('login-pass').value.trim();
+
+      let found = pharmacyData.staff.find(s => s.userid === id && s.pass === pass);
+      if (!found) {
+        alert('خطا: آیدی پرسنلی یا رمز عبور اشتباه است یا در سیستم ثبت نشده است!');
+        return;
+      }
+
+      currentUser = found;
       openApp();
     }
 
@@ -471,8 +486,11 @@
     }
 
     function logout() {
+      currentUser = null;
       document.getElementById('app-screen').classList.add('hidden');
       document.getElementById('auth-screen').classList.remove('hidden');
+      document.getElementById('login-id').value = '';
+      document.getElementById('login-pass').value = '';
     }
 
     function updateStats() {
@@ -512,7 +530,6 @@
         document.getElementById('m-exp').value = info.exp;
         document.getElementById('m-batch').value = info.batch;
         document.getElementById('m-loc').value = info.loc;
-        alert(`✨ محصول شناسایی شد:\nنام: ${info.name}\nتاریخ تولید: ${info.mfg}\nتاریخ انقضا: ${info.exp}\nاطلاعات با موفقیت بارگذاری شد.`);
         return;
       }
 
@@ -527,7 +544,6 @@
         document.getElementById('m-min').value = foundInInv.min || 5;
         document.getElementById('m-buy').value = foundInInv.buy || 0;
         document.getElementById('m-sell').value = foundInInv.sell || 0;
-        alert(`✨ اطلاعات از سابقه انبار برای "${foundInInv.name}" بارگذاری شد.`);
         return;
       }
 
@@ -542,33 +558,44 @@
       html5QrCode.scanFile(file, true)
         .then(text => {
           parseGS1(text);
-          openModal();
+          openModalDirect();
         })
         .catch(err => {
           alert('بارکدی در تصویر یافت نشد.');
         });
     }
 
+    // باز شدن مستقیم مودال و دوربین بدون معطلی و متن‌های اضافی روی هدر
     function openModal() {
       document.getElementById('item-modal').classList.remove('hidden');
+      startCameraScanner();
+    }
+
+    function openModalDirect() {
+      document.getElementById('item-modal').classList.remove('hidden');
+    }
+
+    function startCameraScanner() {
       if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-          fps: 10, 
-          qrbox: 250,
-          aspectRatio: 1.0,
-          facingMode: "environment"
-        }, false);
+        html5QrcodeScanner = new Html5Qrcode("reader");
       }
-      html5QrcodeScanner.render((text) => {
-        parseGS1(text);
-        closeModal();
-      }, (err)=>{});
+      html5QrcodeScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText, decodedResult) => {
+          parseGS1(decodedText);
+          html5QrcodeScanner.stop().catch(()=>{});
+        },
+        (errorMessage) => {}
+      ).catch(err => {
+        console.log("خطا در دسترسی به دوربین:", err);
+      });
     }
 
     function closeModal() {
       document.getElementById('item-modal').classList.add('hidden');
       if (html5QrcodeScanner) {
-        html5QrcodeScanner.clear().catch(()=>{});
+        html5QrcodeScanner.stop().catch(()=>{});
       }
     }
 
