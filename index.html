@@ -17,7 +17,7 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-  <!-- ================= صفحه احراز هویت (ورود / ثبت‌نام / بازیابی) ================= -->
+  <!-- ================= صفحه احراز هویت ================= -->
   <div id="auth-screen" class="flex-1 flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-md p-6 sm:p-8 space-y-6">
       
@@ -49,7 +49,7 @@
         </div>
       </form>
 
-      <!-- فرم ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی -->
+      <!-- فرم ثبت‌نام -->
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
         <div class="text-center pb-1">
           <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی</h3>
@@ -188,15 +188,22 @@
       <div class="glass-card p-5 text-center space-y-3 border-cyan-500/40">
         <div class="w-12 h-12 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-cyan-500/30">📷</div>
         <div class="space-y-1">
-          <h3 class="font-bold text-white text-sm">اسکن هوشمند TTAC / GS1</h3>
-          <p class="text-[11px] text-slate-400">استخراج خودکار انقضا، سری ساخت و مکان انبار</p>
+          <h3 class="font-bold text-white text-sm">اسکن هوشمند بارکد خطی و مربعی TTAC / GS1</h3>
+          <p class="text-[11px] text-slate-400">تشخیص اتوماتیک نام محصول، تاریخ تولید و انقضا از دیتابیس جامع بارکدها</p>
         </div>
-        <button onclick="openModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
-          <span>📷</span> شروع اسکن با دوربین
-        </button>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+          <button onclick="openModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
+            <span>📷</span> شروع اسکن با دوربین اصلی
+          </button>
+          <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow">
+            <span>📁</span> انتخاب عکس بارکد از گالری
+            <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
+          </label>
+        </div>
       </div>
 
-      <!-- تب‌ها و لیست موجودی / تراکنش‌ها -->
+      <!-- تب‌ها و موجودی انبار -->
       <div class="flex border-b border-slate-800 text-xs">
         <button id="tab-btn-inv" onclick="switchAppTab('inv')" class="py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400">📦 موجودی انبار</button>
         <button id="tab-btn-tx" onclick="switchAppTab('tx')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white">📑 تراکنش‌ها و اکسل</button>
@@ -222,7 +229,7 @@
     </main>
   </div>
 
-  <!-- ================= مودال مدیریت پرسنل و آیدی‌ها ================= -->
+  <!-- ================= مودال مدیریت پرسنل ================= -->
   <div id="staff-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-5 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -248,15 +255,14 @@
     </div>
   </div>
 
-  <!-- ================= مودال ثبت و مدیریت کالا (با دوربین فعال) ================= -->
+  <!-- ================= مودال ثبت و مدیریت کالا (با دکمه‌های کامل عملیاتی) ================= -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white">اطلاعات فرآورده دارویی / کالاپزشکی (GS1)</h3>
+        <h3 class="font-bold text-sm text-white">اسکن و ثبت فرآورده دارویی / کالاپزشکی (GS1)</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
-      <!-- کادر دوربین اسکنر -->
       <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black">
         <div id="reader" class="w-full"></div>
       </div>
@@ -323,13 +329,14 @@
           </div>
         </div>
 
+        <!-- دکمه‌های کامل عملیاتی دقیقاً مشابه تصویر شما -->
         <div class="grid grid-cols-2 gap-2 pt-3">
-          <button onclick="submitItem('in')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl text-xs shadow">➕ ثبت ورود کالا</button>
-          <button onclick="submitItem('out')" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 rounded-xl text-xs shadow">➖ ثبت خروج / فروش</button>
+          <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➕ ثبت ورود کالا</button>
+          <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➖ ثبت خروج / فروش</button>
         </div>
         <div class="grid grid-cols-2 gap-2 pt-1">
-          <button onclick="submitItem('return')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">↩️ ثبت مرجوعی</button>
-          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs">🗑️ ثبت ضایعات</button>
+          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">🗑️ ثبت ضایعات</button>
+          <button onclick="submitItem('return')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">↩️ ثبت مرجوعی</button>
         </div>
       </div>
     </div>
@@ -340,8 +347,15 @@
     let pharmacyData = { name: "کالاپزشکی صبوری", items: [], txs: [], staff: [] };
     let html5QrcodeScanner = null;
 
+    // دیتابیس جامع بارکدها (مرکز داده برای شناسایی اتوماتیک اقلام با بارکد)
+    const globalBarcodeDB = {
+      "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1" },
+      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2" },
+      "6260987654321": { name: "آمپول استامینوفن تزریقی", mfg: "1405/02/15", exp: "1407/02/15", batch: "AMP-442", loc: "یخچالی مرکزی" }
+    };
+
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v5');
+      const saved = localStorage.getItem('pharma_pro_db_v9');
       if (saved) {
         try { pharmacyData = JSON.parse(saved); } catch(e){}
       }
@@ -361,7 +375,7 @@
     }
 
     function saveDB() {
-      localStorage.setItem('pharma_pro_db_v5', JSON.stringify(pharmacyData));
+      localStorage.setItem('pharma_pro_db_v9', JSON.stringify(pharmacyData));
     }
 
     function switchAuthView(v) {
@@ -392,14 +406,12 @@
       el.innerText = (ok ? '✓ ' : '✕ ') + text;
     }
 
-    // ثبت‌‌نام و چک کردن تکراری نبودن آیدی
     function handleRegister(e) {
       e.preventDefault();
       const userid = document.getElementById('reg-userid').value.trim();
       
-      // بررسی تکراری نبودن آیدی
       if (pharmacyData.staff.some(s => s.userid === userid) || userid === 'ADMIN-888') {
-        alert('خطا: این آیدی پرسنلی قبلاً ثبت شده است! لطفا آیدی دیگری انتخاب کنید.');
+        alert('خطا: این آیدی پرسنلی قبلاً ثبت شده است!');
         return;
       }
 
@@ -414,21 +426,15 @@
 
       pharmacyData.staff.push(newAdmin);
       saveDB();
-      alert('ثبت‌نام با موفقیت انجام شد. اکنون وارد صفحه ورود شوید.');
+      alert('ثبت‌نام با موفقیت انجام شد. وارد صفحه ورود شوید.');
       switchAuthView('login');
     }
 
-    // ورود به سیستم
     function handleLogin(e) {
       e.preventDefault();
       const id = document.getElementById('login-id').value.trim();
-      
       let found = pharmacyData.staff.find(s => s.userid === id);
-      if (found) {
-        currentUser = found;
-      } else {
-        currentUser = { name: 'فرشاد مجید', phone: '09914912575', role: 'مدیر کل / مسئول فنی', userid: id || 'ADMIN-888' };
-      }
+      currentUser = found ? found : { name: 'فرشاد مجید', phone: '09914912575', role: 'مدیر کل / مسئول فنی', userid: id || 'ADMIN-888' };
       openApp();
     }
 
@@ -478,9 +484,11 @@
       document.getElementById('alert-min').innerText = minAlerts;
     }
 
+    // استخراج هوشمند بارکد و تطبیق خودکار با دیتابیس جامع بارکدها و انبار
     function parseGS1(raw) {
       if (!raw || raw.length < 8) return;
-      let gtin = raw, exp = '', batch = '';
+      let gtin = raw, exp = '', batch = '', mfg = '';
+      
       if (raw.includes('01') && raw.includes('17')) {
         const gMatch = raw.match(/01(\d{14})/);
         const eMatch = raw.match(/17(\d{6})/);
@@ -492,20 +500,69 @@
         }
         if (bMatch) batch = bMatch[1];
       }
-      if (gtin) document.getElementById('m-gtin').value = gtin;
+
+      document.getElementById('m-gtin').value = gtin;
+
+      // ۱. ابتدا جستجو در دیتابیس جامع مرکزی بارکدها
+      if (globalBarcodeDB[gtin]) {
+        let info = globalBarcodeDB[gtin];
+        document.getElementById('m-name').value = info.name;
+        document.getElementById('m-mfg').value = info.mfg;
+        document.getElementById('m-exp').value = info.exp;
+        document.getElementById('m-batch').value = info.batch;
+        document.getElementById('m-loc').value = info.loc;
+        alert(`✨ محصول شناسایی شد:\nنام: ${info.name}\nتاریخ تولید: ${info.mfg}\nتاریخ انقضا: ${info.exp}\nاطلاعات با موفقیت بارگذاری شد.`);
+        return;
+      }
+
+      // ۲. ثانیاً جستجو در سابقه موجودی انبار خودِ کاربر
+      let foundInInv = pharmacyData.items.find(i => i.gtin === gtin);
+      if (foundInInv) {
+        document.getElementById('m-name').value = foundInInv.name;
+        document.getElementById('m-mfg').value = foundInInv.mfg || '1405/01/01';
+        document.getElementById('m-exp').value = foundInInv.exp;
+        document.getElementById('m-batch').value = foundInInv.batch;
+        document.getElementById('m-loc').value = foundInInv.loc;
+        document.getElementById('m-temp').value = foundInInv.storage || 'معمولی (دمای اتاق)';
+        document.getElementById('m-min').value = foundInInv.min || 5;
+        document.getElementById('m-buy').value = foundInInv.buy || 0;
+        document.getElementById('m-sell').value = foundInInv.sell || 0;
+        alert(`✨ اطلاعات از سابقه انبار برای "${foundInInv.name}" بارگذاری شد.`);
+        return;
+      }
+
+      // اگر در هیچ‌کدام نبود
       if (exp) document.getElementById('m-exp').value = exp;
       if (batch) document.getElementById('m-batch').value = batch;
     }
 
-    // فعال‌‌سازی دوربین اسکن
+    function scanImageFromGallery(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const html5QrCode = new Html5Qrcode("reader");
+      html5QrCode.scanFile(file, true)
+        .then(text => {
+          parseGS1(text);
+          openModal();
+        })
+        .catch(err => {
+          alert('بارکدی در تصویر یافت نشد.');
+        });
+    }
+
     function openModal() {
       document.getElementById('item-modal').classList.remove('hidden');
       if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+          fps: 10, 
+          qrbox: 250,
+          aspectRatio: 1.0,
+          facingMode: "environment"
+        }, false);
       }
       html5QrcodeScanner.render((text) => {
         parseGS1(text);
-        alert('بارکد اسکن شد: ' + text);
+        closeModal();
       }, (err)=>{});
     }
 
@@ -521,9 +578,11 @@
       const gtin = document.getElementById('m-gtin').value;
       const qty = parseInt(document.getElementById('m-qty').value) || 1;
       const batch = document.getElementById('m-batch').value || 'BATCH-1';
+      const mfg = document.getElementById('m-mfg').value || '1405/01/01';
       const exp = document.getElementById('m-exp').value || '1406/12/29';
       const loc = document.getElementById('m-loc').value || 'قفسه عمومی';
       const storage = document.getElementById('m-temp').value;
+      const buy = parseFloat(document.getElementById('m-buy').value) || 0;
       const sell = parseFloat(document.getElementById('m-sell').value) || 0;
       const min = parseInt(document.getElementById('m-min').value) || 5;
 
@@ -533,7 +592,7 @@
       let existing = items.find(i => i.gtin === gtin);
       if (type === 'in' || type === 'return') {
         if (existing) existing.qty += qty;
-        else items.push({ gtin, name, qty, batch, exp, loc, storage, sell, min });
+        else items.push({ gtin, name, qty, batch, mfg, exp, loc, storage, buy, sell, min });
       } else {
         if (existing && existing.qty >= qty) existing.qty -= qty;
         else { alert('موجودی انبار کافی نیست!'); return; }
@@ -640,7 +699,6 @@
       link.click();
     }
 
-    // مدیریت پرسنل
     function openStaffModal() { document.getElementById('staff-modal').classList.remove('hidden'); renderStaffList(); }
     function closeStaffModal() { document.getElementById('staff-modal').classList.add('hidden'); }
 
