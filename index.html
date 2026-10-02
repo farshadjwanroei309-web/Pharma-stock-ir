@@ -13,6 +13,9 @@
     .glass-card { background: #1c2541; border: 1px solid #2a3a5e; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     .input-dark { background: #0b132b; border: 1px solid #3a506b; color: #ffffff; border-radius: 0.75rem; padding: 0.6rem 0.8rem; width: 100%; outline: none; font-size: 0.85rem; }
     .input-dark:focus { border-color: #48cae4; box-shadow: 0 0 10px rgba(72, 202, 228, 0.2); }
+    /* استایل آیکون چشم استاندارد و کمرنگ */
+    .eye-btn { opacity: 0.5; transition: opacity 0.2s; background: none; border: none; cursor: pointer; }
+    .eye-btn:hover { opacity: 0.9; }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -37,7 +40,7 @@
           <label class="block text-xs text-slate-300 mb-1">رمز عبور:</label>
           <div class="relative">
             <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
+            <button type="button" onclick="togglePassword('login-pass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
           </div>
         </div>
         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-sm">
@@ -75,7 +78,7 @@
           <label class="block text-xs text-slate-300 mb-1">رمز عبور امن:</label>
           <div class="relative">
             <input type="password" id="reg-pass" placeholder="Admin@123" required oninput="validatePasswordRules(this.value)" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
+            <button type="button" onclick="togglePassword('reg-pass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
           </div>
           <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-[11px] space-y-1 mt-2">
             <div id="rule-len" class="text-red-400">✕ حداقل ۸ کاراکتر</div>
@@ -103,7 +106,7 @@
           <input type="text" id="forgot-code" placeholder="کد تایید ۴ رقمی" class="input-dark text-center font-mono" dir="ltr">
           <div class="relative">
             <input type="password" id="forgot-newpass" placeholder="رمز عبور جدید" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('forgot-newpass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
+            <button type="button" onclick="togglePassword('forgot-newpass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
           </div>
         </div>
         <button type="submit" id="forgot-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
@@ -241,7 +244,7 @@
           <input type="text" id="staff-id" placeholder="آیدی پرسنلی (مثال: STAFF-02)" class="input-dark mb-2 font-mono" dir="ltr">
           <div class="relative mb-2">
             <input type="password" id="staff-pass" placeholder="رمز عبور پرسنل" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('staff-pass', this)" class="absolute left-3 top-2.5 text-slate-400 hover:text-white text-base">👁️</button>
+            <button type="button" onclick="togglePassword('staff-pass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
           </div>
           <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب پرسنل</button>
         </div>
@@ -259,6 +262,12 @@
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white">اسکن و ثبت فرآورده دارویی / کالاپزشکی (GS1)</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+      </div>
+
+      <!-- کادر پیش‌نمایش عکس گالری با سایز کنترل‌شده و استاندارد -->
+      <div id="gallery-preview-container" class="hidden text-center bg-black/40 p-2 rounded-xl border border-slate-800">
+        <p class="text-[10px] text-cyan-400 mb-1">تصویر بارکد انتخاب شده:</p>
+        <img id="previewImage" class="max-h-36 mx-auto rounded-lg object-contain border border-slate-700">
       </div>
 
       <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black">
@@ -393,11 +402,12 @@
       else if (v === 'forgot') document.getElementById('form-forgot').classList.remove('hidden');
     }
 
+    // تغییر وضعیت رمز عبور با آیکون چشم استاندارد
     function togglePassword(id, btn) {
       const inp = document.getElementById(id);
       if (inp.type === 'password') {
         inp.type = 'text';
-        btn.textContent = '🐒';
+        btn.textContent = '👁️‍🗨️'; // چشم باز با خط یا حالت فعال
       } else {
         inp.type = 'password';
         btn.textContent = '👁️';
@@ -551,28 +561,53 @@
       if (batch) document.getElementById('m-batch').value = batch;
     }
 
+    // پاکسازی کامل فرم و فیلدها پیش از اسکن یا آپلود جدید
+    function clearModalForm() {
+      document.getElementById('m-gtin').value = '';
+      document.getElementById('m-name').value = '';
+      document.getElementById('m-mfg').value = '';
+      document.getElementById('m-exp').value = '';
+      document.getElementById('m-batch').value = '';
+      document.getElementById('m-qty').value = '1';
+      document.getElementById('m-loc').value = '';
+      document.getElementById('m-buy').value = '';
+      document.getElementById('m-sell').value = '';
+      document.getElementById('m-min').value = '5';
+      document.getElementById('gallery-preview-container').classList.add('hidden');
+    }
+
     function scanImageFromGallery(e) {
       const file = e.target.files[0];
       if (!file) return;
+
+      // ابتدا پاکسازی فیلدهای قبلی
+      clearModalForm();
+
+      // نمایش عکس در کادر کنترل‌شده کوچک‌تر
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        document.getElementById('previewImage').src = evt.target.result;
+        document.getElementById('gallery-preview-container').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+
+      // باز کردن مودال
+      document.getElementById('item-modal').classList.remove('hidden');
+
       const html5QrCode = new Html5Qrcode("reader");
       html5QrCode.scanFile(file, true)
         .then(text => {
           parseGS1(text);
-          openModalDirect();
         })
         .catch(err => {
-          alert('بارکدی در تصویر یافت نشد.');
+          alert('بارکدی در تصویر یافت نشد یا کیفیت تصویر کم است. لطفاً اطلاعات را دستی وارد کنید.');
         });
     }
 
-    // باز شدن مستقیم مودال و دوربین بدون معطلی و متن‌های اضافی روی هدر
     function openModal() {
+      clearModalForm();
       document.getElementById('item-modal').classList.remove('hidden');
       startCameraScanner();
-    }
-
-    function openModalDirect() {
-      document.getElementById('item-modal').classList.remove('hidden');
     }
 
     function startCameraScanner() {
