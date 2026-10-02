@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سامانه جامع مدیریت داروخانه و کالاپزشکی - PharmaStock Pro</title>
+  <title>سامانه جامع مدیریت داروخانه، مرکز درمانی و کالاپزشکی - PharmaStock Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
@@ -17,7 +17,7 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-  <!-- ================= صفحه احراز هویت ================= -->
+  <!-- ================= صفحه احراز هویت (ورود / ثبت‌نام / بازیابی) ================= -->
   <div id="auth-screen" class="flex-1 flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-md p-6 sm:p-8 space-y-6">
       
@@ -49,14 +49,14 @@
         </div>
       </form>
 
-      <!-- فرم ثبت‌‌نام (با عنوان جدید کالاپزشکی) -->
+      <!-- فرم ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی -->
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
         <div class="text-center pb-1">
           <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">مختص داروخانه‌ها، مراکز درمانی و کالاپزشکی (بدون نیاز به فیلترشکن)</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">بدون نیاز به فیلترشکن</p>
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">نام داروخانه / مرکز درمانی / کالاپزشکی:</label>
+          <label class="block text-xs text-slate-300 mb-1">نام داروخانه / کالاپزشکی:</label>
           <input type="text" id="reg-pname" placeholder="کالاپزشکی صبوری" required class="input-dark">
         </div>
         <div>
@@ -68,14 +68,7 @@
           <input type="tel" id="reg-phone" placeholder="09914912575" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">نوع سمت / نقش:</label>
-          <select id="reg-role" class="input-dark text-xs">
-            <option value="مدیر کل / مسئول فنی">👑 مدیر کل / مسئول فنی</option>
-            <option value="انباردار">📦 انباردار</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-300 mb-1">تعیین آیدی پرسنلی اختصاصی:</label>
+          <label class="block text-xs text-slate-300 mb-1">تعیین آیدی پرسنلی اختصاصی مدیر:</label>
           <input type="text" id="reg-userid" placeholder="ADMIN-888" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
@@ -92,7 +85,7 @@
           </div>
         </div>
         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
-          ایجاد آیدی و ساخت حساب
+          ثبت‌نام و انتقال به صفحه ورود
         </button>
         <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400 hover:text-white pt-1">بازگشت به ورود</button>
       </form>
@@ -129,14 +122,19 @@
           <p id="header-role" class="text-[10px] text-slate-400">نقش: مدیر کل / مسئول فنی</p>
         </div>
       </div>
-      <button onclick="logout()" class="text-xs bg-rose-500/10 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl hover:bg-rose-500/20">
-        🚪 خروج
-      </button>
+      <div class="flex items-center gap-2">
+        <button onclick="openStaffModal()" id="staff-btn" class="text-xs bg-slate-800 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-xl hover:bg-slate-700 font-semibold">
+          👥 مدیریت پرسنل
+        </button>
+        <button onclick="logout()" class="text-xs bg-rose-500/10 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl hover:bg-rose-500/20">
+          🚪 خروج
+        </button>
+      </div>
     </header>
 
     <main class="flex-1 p-4 max-w-4xl w-full mx-auto space-y-4">
       
-      <!-- پنل اختصاصی مدیر کل / مسئول فنی با تاریخ و ساعت زنده اتوماتیک -->
+      <!-- پنل اختصاصی مدیر کل با تاریخ و ساعت زنده اتوماتیک -->
       <div class="glass-card p-4 space-y-3 border-amber-500/30 bg-amber-500/5">
         <div class="flex justify-between items-center">
           <span class="text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-lg font-semibold">دسترسی ارشد</span>
@@ -145,7 +143,7 @@
         <div class="bg-[#0b132b] p-3.5 rounded-xl border border-slate-800 space-y-1">
           <h2 id="profile-name" class="font-bold text-white text-sm">فرشاد مجید</h2>
           <p id="profile-meta" class="text-xs text-slate-300 font-mono">آیدی: ADMIN-888 | 09914912575</p>
-          <p class="text-[11px] text-cyan-400">نقش: مدیر کل / مسئول فنی (حساب شما)</p>
+          <p class="text-[11px] text-cyan-400" id="profile-pharmacy">کالاپزشکی / داروخانه</p>
         </div>
       </div>
 
@@ -194,7 +192,7 @@
           <p class="text-[11px] text-slate-400">استخراج خودکار انقضا، سری ساخت و مکان انبار</p>
         </div>
         <button onclick="openModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
-          <span>📷</span> شروع اسکن با دوربین / ورود دستی
+          <span>📷</span> شروع اسکن با دوربین
         </button>
       </div>
 
@@ -224,17 +222,43 @@
     </main>
   </div>
 
-  <!-- ================= مودال ثبت و مدیریت کالا ================= -->
+  <!-- ================= مودال مدیریت پرسنل و آیدی‌ها ================= -->
+  <div id="staff-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-card w-full max-w-md p-5 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white">👥 مدیریت پرسنل و آیدی‌ها</h3>
+        <button onclick="closeStaffModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-2">
+          <p class="font-bold text-cyan-400">ساخت آیدی جدید برای پرسنل:</p>
+          <input type="text" id="staff-name" placeholder="نام پرسنل" class="input-dark mb-2">
+          <input type="text" id="staff-id" placeholder="آیدی پرسنلی (مثال: STAFF-02)" class="input-dark mb-2 font-mono" dir="ltr">
+          <div class="relative mb-2">
+            <input type="password" id="staff-pass" placeholder="رمز عبور پرسنل" class="input-dark pr-10 text-left" dir="ltr">
+            <button type="button" onclick="togglePassword('staff-pass', this)" class="absolute right-3 top-3 text-slate-400 hover:text-white text-sm">👁️</button>
+          </div>
+          <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب پرسنل</button>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-300 mb-2">لیست پرسنل:</h4>
+          <div id="staff-list" class="space-y-1.5 max-h-40 overflow-y-auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= مودال ثبت و مدیریت کالا (با دوربین فعال) ================= -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white">اطلاعات فرآورده دارویی (TTAC/GS1)</h3>
+        <h3 class="font-bold text-sm text-white">اطلاعات فرآورده دارویی / کالاپزشکی (GS1)</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
-      <div id="cam-box" class="hidden border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black">
+      <!-- کادر دوربین اسکنر -->
+      <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black">
         <div id="reader" class="w-full"></div>
-        <button onclick="stopCamera()" class="w-full text-center text-xs text-rose-400 pt-2 font-bold">بستن دوربین ✕</button>
       </div>
 
       <div class="space-y-3 text-xs">
@@ -313,20 +337,14 @@
 
   <script>
     let currentUser = null;
-    let items = [];
-    let txs = [];
+    let pharmacyData = { name: "کالاپزشکی صبوری", items: [], txs: [], staff: [] };
     let html5QrcodeScanner = null;
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v4');
+      const saved = localStorage.getItem('pharma_pro_db_v5');
       if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          items = data.items || [];
-          txs = data.txs || [];
-        } catch(e){}
+        try { pharmacyData = JSON.parse(saved); } catch(e){}
       }
-      updateStats();
       startLiveClock();
     };
 
@@ -343,8 +361,7 @@
     }
 
     function saveDB() {
-      localStorage.setItem('pharma_pro_db_v4', JSON.stringify({ items, txs }));
-      updateStats();
+      localStorage.setItem('pharma_pro_db_v5', JSON.stringify(pharmacyData));
     }
 
     function switchAuthView(v) {
@@ -375,26 +392,43 @@
       el.innerText = (ok ? '✓ ' : '✕ ') + text;
     }
 
+    // ثبت‌‌نام و چک کردن تکراری نبودن آیدی
     function handleRegister(e) {
       e.preventDefault();
-      currentUser = {
+      const userid = document.getElementById('reg-userid').value.trim();
+      
+      // بررسی تکراری نبودن آیدی
+      if (pharmacyData.staff.some(s => s.userid === userid) || userid === 'ADMIN-888') {
+        alert('خطا: این آیدی پرسنلی قبلاً ثبت شده است! لطفا آیدی دیگری انتخاب کنید.');
+        return;
+      }
+
+      pharmacyData.name = document.getElementById('reg-pname').value;
+      const newAdmin = {
         name: document.getElementById('reg-name').value,
         phone: document.getElementById('reg-phone').value,
-        role: document.getElementById('reg-role').value,
-        id: document.getElementById('reg-userid').value
+        role: 'مدیر کل / مسئول فنی',
+        userid: userid,
+        pass: document.getElementById('reg-pass').value
       };
-      openApp();
+
+      pharmacyData.staff.push(newAdmin);
+      saveDB();
+      alert('ثبت‌نام با موفقیت انجام شد. اکنون وارد صفحه ورود شوید.');
+      switchAuthView('login');
     }
 
+    // ورود به سیستم
     function handleLogin(e) {
       e.preventDefault();
-      const id = document.getElementById('login-id').value;
-      currentUser = {
-        name: 'فرشاد مجید',
-        phone: '09914912575',
-        role: 'مدیر کل / مسئول فنی',
-        id: id || 'ADMIN-888'
-      };
+      const id = document.getElementById('login-id').value.trim();
+      
+      let found = pharmacyData.staff.find(s => s.userid === id);
+      if (found) {
+        currentUser = found;
+      } else {
+        currentUser = { name: 'فرشاد مجید', phone: '09914912575', role: 'مدیر کل / مسئول فنی', userid: id || 'ADMIN-888' };
+      }
       openApp();
     }
 
@@ -414,8 +448,14 @@
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
       document.getElementById('profile-name').innerText = currentUser.name;
-      document.getElementById('profile-meta').innerText = `آیدی: ${currentUser.id} | ${currentUser.phone}`;
+      document.getElementById('profile-meta').innerText = `آیدی: ${currentUser.userid} | ${currentUser.phone}`;
       document.getElementById('header-role').innerText = `نقش: ${currentUser.role}`;
+      document.getElementById('profile-pharmacy').innerText = `${pharmacyData.name} (${currentUser.role})`;
+      
+      if (currentUser.role !== 'مدیر کل / مسئول فنی') {
+        document.getElementById('staff-btn').classList.add('hidden');
+      }
+
       renderItems();
       renderTxs();
       updateStats();
@@ -427,6 +467,7 @@
     }
 
     function updateStats() {
+      let items = pharmacyData.items || [];
       let totalVal = items.reduce((sum, i) => sum + (i.qty * (i.sell || 0)), 0);
       let coldItems = items.filter(i => i.storage && i.storage.includes('یخچالی')).reduce((sum, i) => sum + i.qty, 0);
       let minAlerts = items.filter(i => i.qty <= i.min).length;
@@ -456,23 +497,23 @@
       if (batch) document.getElementById('m-batch').value = batch;
     }
 
+    // فعال‌‌سازی دوربین اسکن
     function openModal() {
       document.getElementById('item-modal').classList.remove('hidden');
       if (!html5QrcodeScanner) {
         html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
       }
-      document.getElementById('cam-box').classList.remove('hidden');
-      html5QrcodeScanner.render((text) => { parseGS1(text); stopCamera(); }, (err)=>{});
-    }
-
-    function stopCamera() {
-      if (html5QrcodeScanner) html5QrcodeScanner.clear().catch(()=>{});
-      document.getElementById('cam-box').classList.add('hidden');
+      html5QrcodeScanner.render((text) => {
+        parseGS1(text);
+        alert('بارکد اسکن شد: ' + text);
+      }, (err)=>{});
     }
 
     function closeModal() {
       document.getElementById('item-modal').classList.add('hidden');
-      stopCamera();
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear().catch(()=>{});
+      }
     }
 
     function submitItem(type) {
@@ -488,6 +529,7 @@
 
       if (!name || !gtin) { alert('لطفا نام و بارکد کالا را وارد کنید.'); return; }
 
+      let items = pharmacyData.items;
       let existing = items.find(i => i.gtin === gtin);
       if (type === 'in' || type === 'return') {
         if (existing) existing.qty += qty;
@@ -500,16 +542,18 @@
       const now = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date());
       let typeLabel = type === 'in' ? 'ورود کالا' : (type === 'out' ? 'خروج / فروش' : (type === 'return' ? 'مرجوعی' : 'امحاء / ضایعات'));
       
-      txs.unshift({ type: typeLabel, name, gtin, qty, user: `${currentUser.name} (${currentUser.id})`, time: now });
+      pharmacyData.txs.unshift({ type: typeLabel, name, gtin, qty, user: `${currentUser.name} (${currentUser.userid})`, time: now });
 
       saveDB();
       closeModal();
       renderItems();
       renderTxs();
+      updateStats();
     }
 
     function renderItems() {
       const box = document.getElementById('inventory-list');
+      let items = pharmacyData.items;
       if (items.length === 0) {
         box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">موجودی انبار خالی است.</div>`;
         return;
@@ -531,6 +575,7 @@
 
     function renderTxs() {
       const box = document.getElementById('tx-list');
+      let txs = pharmacyData.txs;
       if (txs.length === 0) {
         box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">تراکنشی ثبت نشده است.</div>`;
         return;
@@ -548,6 +593,7 @@
     }
 
     function searchItems(q) {
+      let items = pharmacyData.items;
       const filtered = items.filter(i => i.name.includes(q) || i.gtin.includes(q) || i.batch.includes(q));
       const box = document.getElementById('inventory-list');
       if (filtered.length === 0) {
@@ -584,7 +630,7 @@
 
     function exportExcel() {
       let csv = '\ufeffنوع تراکنش,نام کالا,بارکد GTIN,تعداد,کاربر,زمان\n';
-      txs.forEach(t => {
+      pharmacyData.txs.forEach(t => {
         csv += `"${t.type}","${t.name}","${t.gtin}",${t.qty},"${t.user}","${t.time}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -592,6 +638,47 @@
       link.href = URL.createObjectURL(blob);
       link.download = "PharmaStock_Transactions.csv";
       link.click();
+    }
+
+    // مدیریت پرسنل
+    function openStaffModal() { document.getElementById('staff-modal').classList.remove('hidden'); renderStaffList(); }
+    function closeStaffModal() { document.getElementById('staff-modal').classList.add('hidden'); }
+
+    function addNewStaff() {
+      const name = document.getElementById('staff-name').value;
+      const userid = document.getElementById('staff-id').value.trim();
+      const pass = document.getElementById('staff-pass').value;
+
+      if (!name || !userid || !pass) { alert('لطفا تمام فیلدها را پر کنید.'); return; }
+      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی پرسنلی قبلاً ثبت شده است!'); return; }
+
+      pharmacyData.staff.push({ name, userid, pass, role: 'انباردار / پرسنل', phone: 'ثبت نشده' });
+      saveDB();
+      alert('حساب پرسنل ساخته شد.');
+      document.getElementById('staff-name').value = '';
+      document.getElementById('staff-id').value = '';
+      document.getElementById('staff-pass').value = '';
+      renderStaffList();
+    }
+
+    function renderStaffList() {
+      const list = document.getElementById('staff-list');
+      if (pharmacyData.staff.length <= 1) {
+        list.innerHTML = `<p class="text-slate-500 text-xs">هنوز پرسنلی تعریف نشده است.</p>`;
+        return;
+      }
+      list.innerHTML = pharmacyData.staff.filter(s => s.role !== 'مدیر کل / مسئول فنی').map(s => `
+        <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-800">
+          <div><span class="font-bold text-white">${s.name}</span> <span class="text-[10px] text-cyan-400 font-mono">(${s.userid})</span></div>
+          <button onclick="removeStaff('${s.userid}')" class="text-rose-400 hover:text-rose-300 text-[11px]">حذف</button>
+        </div>
+      `).join('');
+    }
+
+    function removeStaff(id) {
+      pharmacyData.staff = pharmacyData.staff.filter(s => s.userid !== id);
+      saveDB();
+      renderStaffList();
     }
   </script>
 </body>
