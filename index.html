@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سامانه جامع مدیریت داروخانه، مرکز درمانی و کالاپزشکی - PharmaStock Pro</title>
+  <title>سامانه جامع مدیریت داروخانه و کالاپزشکی - PharmaStock Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <!-- کتابخانه نمودار Chart.js برای گرافیک‌های انبار -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://v1.fontapi.ir/css/Vazirmatn');
     * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; }
@@ -15,6 +17,11 @@
     .input-dark:focus { border-color: #48cae4; box-shadow: 0 0 10px rgba(72, 202, 228, 0.2); }
     .eye-btn { opacity: 0.5; transition: opacity 0.2s; background: none; border: none; cursor: pointer; }
     .eye-btn:hover { opacity: 0.9; }
+    @media print {
+      body * { visibility: hidden; }
+      #print-invoice-area, #print-invoice-area * { visibility: visible; }
+      #print-invoice-area { position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; padding: 20px; }
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -22,14 +29,12 @@
   <!-- ================= صفحه احراز هویت ================= -->
   <div id="auth-screen" class="flex-1 flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-md p-6 sm:p-8 space-y-6">
-      
       <div class="text-center space-y-2">
         <div class="w-14 h-14 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold border border-cyan-500/30">🏥</div>
         <h2 id="auth-title" class="text-xl font-bold text-white">ورود به سامانه انبار</h2>
         <p id="auth-subtitle" class="text-xs text-slate-400">سیستم هوشمند انبارداری و ثبت تجهیزات</p>
       </div>
 
-      <!-- فرم ورود -->
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs text-slate-300 mb-1">شناسه / آیدی پرسنلی:</label>
@@ -51,11 +56,9 @@
         </div>
       </form>
 
-      <!-- فرم ثبت‌نام -->
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
         <div class="text-center pb-1">
           <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه / کالاپزشکی</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">کنترل یکتا بودن شماره همراه و آیدی</p>
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1">نام داروخانه / کالاپزشکی:</label>
@@ -66,54 +69,36 @@
           <input type="text" id="reg-name" value="فرشاد مجیدی" required class="input-dark">
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">شماره همراه (یکتا - فقط یک بار):</label>
+          <label class="block text-xs text-slate-300 mb-1">شماره همراه (یکتا):</label>
           <input type="tel" id="reg-phone" placeholder="09914912575" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">تعیین آیدی پرسنلی اختصاصی (یکتا):</label>
+          <label class="block text-xs text-slate-300 mb-1">تعیین آیدی پرسنلی اختصاصی:</label>
           <input type="text" id="reg-userid" placeholder="ADMIN-888" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1">رمز عبور امن:</label>
           <div class="relative">
-            <input type="password" id="reg-pass" placeholder="Admin@123" required oninput="validatePasswordRules(this.value)" class="input-dark pl-10 pr-4 text-left" dir="ltr">
+            <input type="password" id="reg-pass" placeholder="Admin@123" required class="input-dark pl-10 pr-4 text-left" dir="ltr">
             <button type="button" onclick="togglePassword('reg-pass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
-          </div>
-          <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-[11px] space-y-1 mt-2">
-            <div id="rule-len" class="text-red-400">✕ حداقل ۸ کاراکتر</div>
-            <div id="rule-case" class="text-red-400">✕ حروف بزرگ و کوچک (A-z)</div>
-            <div id="rule-num" class="text-red-400">✕ شامل یک عدد (0-9)</div>
-            <div id="rule-sym" class="text-red-400">✕ کاراکتر خاص (@, $, !)</div>
           </div>
         </div>
         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
           ثبت‌نام و انتقال به صفحه ورود
         </button>
-        <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400 hover:text-white pt-1">بازگشت به ورود</button>
+        <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400 pt-1">بازگشت به ورود</button>
       </form>
 
-      <!-- فرم فراموشی رمز -->
       <form id="form-forgot" onsubmit="handleForgot(event)" class="space-y-4 hidden">
         <div>
           <label class="block text-xs text-slate-300 mb-1">شماره همراه خود را وارد کنید:</label>
           <input type="tel" id="forgot-phone" placeholder="09914912575" required class="input-dark text-left font-mono" dir="ltr">
         </div>
-        <div id="forgot-step2" class="space-y-3 hidden">
-          <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-300">
-            ✉️ کد تایید ارسال شد (تست: <span class="font-bold">1234</span>)
-          </div>
-          <input type="text" id="forgot-code" placeholder="کد تایید ۴ رقمی" class="input-dark text-center font-mono" dir="ltr">
-          <div class="relative">
-            <input type="password" id="forgot-newpass" placeholder="رمز عبور جدید" class="input-dark pl-10 pr-4 text-left" dir="ltr">
-            <button type="button" onclick="togglePassword('forgot-newpass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
-          </div>
-        </div>
-        <button type="submit" id="forgot-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
-          دریافت کد بازیابی
+        <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all text-sm">
+          بازیابی رمز عبور
         </button>
-        <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400 hover:text-white">بازگشت به ورود</button>
+        <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400">بازگشت به ورود</button>
       </form>
-
     </div>
   </div>
 
@@ -129,7 +114,7 @@
       </div>
       <div class="flex items-center gap-2">
         <button onclick="openStaffModal()" id="staff-btn" class="text-xs bg-slate-800 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-xl hover:bg-slate-700 font-semibold">
-          👥 مدیریت پرسنل
+          👥 پرسنل
         </button>
         <button onclick="logout()" class="text-xs bg-rose-500/10 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl hover:bg-rose-500/20">
           🚪 خروج
@@ -141,13 +126,13 @@
       
       <div class="glass-card p-4 space-y-3 border-amber-500/30 bg-amber-500/5">
         <div class="flex justify-between items-center">
-          <span class="text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-lg font-semibold">دسترسی ارشد</span>
-          <span class="text-[10px] text-cyan-300 font-mono font-bold" id="live-datetime">در حال بارگذاری زمان...</span>
+          <span class="text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-lg font-semibold">حساب ارشد</span>
+          <span class="text-[10px] text-cyan-300 font-mono font-bold" id="live-datetime">--</span>
         </div>
         <div class="bg-[#0b132b] p-3.5 rounded-xl border border-slate-800 space-y-1">
-          <h2 id="profile-name" class="font-bold text-white text-sm">فرشاد مجیدی</h2>
-          <p id="profile-meta" class="text-xs text-slate-300 font-mono">آیدی: ADMIN-888 | 09914912575</p>
-          <p class="text-[11px] text-cyan-400" id="profile-pharmacy">کالاپزشکی / داروخانه</p>
+          <h2 id="profile-name" class="font-bold text-white text-sm">--</h2>
+          <p id="profile-meta" class="text-xs text-slate-300 font-mono">--</p>
+          <p class="text-[11px] text-cyan-400" id="profile-pharmacy">--</p>
         </div>
       </div>
 
@@ -161,54 +146,20 @@
           <p id="stat-total" class="text-xs sm:text-sm font-bold text-white font-mono">۰ قلم</p>
         </div>
         <div class="glass-card p-3 text-center space-y-1 border-cyan-500/30">
-          <p class="text-[10px] text-slate-400">داروی یخچالی</p>
+          <p class="text-[10px] text-slate-400">یخچالی</p>
           <p id="stat-cold" class="text-xs sm:text-sm font-bold text-blue-400 font-mono">۰ قلم</p>
         </div>
       </div>
 
-      <div class="glass-card p-4 space-y-3">
-        <div class="flex items-center gap-2 text-xs font-bold text-amber-400">
-          <span>🔔</span> وضعیت انقضا و کسری
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="bg-[#0b132b] p-2.5 rounded-xl border border-slate-800 text-center space-y-0.5">
-            <p class="text-[10px] text-slate-400">⚠️ نقطه سفارش</p>
-            <p id="alert-min" class="text-sm font-bold text-amber-400 font-mono">۰</p>
-          </div>
-          <div class="bg-[#0b132b] p-2.5 rounded-xl border border-slate-800 text-center space-y-0.5">
-            <p class="text-[10px] text-slate-400">🟡 نزدیک انقضا</p>
-            <p id="alert-exp" class="text-sm font-bold text-yellow-400 font-mono">۰</p>
-          </div>
-          <div class="bg-[#0b132b] p-2.5 rounded-xl border border-slate-800 text-center space-y-0.5">
-            <p class="text-[10px] text-slate-400">🔴 منقضی / بحرانی</p>
-            <p id="alert-crit" class="text-sm font-bold text-rose-500 font-mono">۰</p>
-          </div>
-        </div>
+      <!-- تب‌های ناوبری اصلی -->
+      <div class="flex border-b border-slate-800 text-xs overflow-x-auto">
+        <button id="tab-btn-inv" onclick="switchAppTab('inv')" class="py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400 whitespace-nowrap">📦 موجودی انبار</button>
+        <button id="tab-btn-scan" onclick="switchAppTab('scan')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📷 اسکنر هوشمند</button>
+        <button id="tab-btn-chart" onclick="switchAppTab('chart')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📊 نمودارها و آمار</button>
+        <button id="tab-btn-tx" onclick="switchAppTab('tx')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📑 تراکنش‌ها و فاکتور</button>
       </div>
 
-      <div class="glass-card p-5 text-center space-y-3 border-cyan-500/40">
-        <div class="w-12 h-12 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-cyan-500/30">📷</div>
-        <div class="space-y-1">
-          <h3 class="font-bold text-white text-sm">اسکن هوشمند بارکد (پایگاه داده جامع و دیتابیس هوشمند)</h3>
-          <p class="text-[11px] text-slate-400">شناخیص اتوماتیک اقلام، تاریخ انقضا و بچ‌نامبر با یک اسکن ساده</p>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-          <button onclick="openCameraModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
-            <span>📷</span> شروع اسکن با دوربین اصلی
-          </button>
-          <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow">
-            <span>📁</span> انتخاب عکس بارکد از گالری
-            <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
-          </label>
-        </div>
-      </div>
-
-      <div class="flex border-b border-slate-800 text-xs">
-        <button id="tab-btn-inv" onclick="switchAppTab('inv')" class="py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400">📦 موجودی انبار</button>
-        <button id="tab-btn-tx" onclick="switchAppTab('tx')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white">📑 تراکنش‌ها و اکسل</button>
-      </div>
-
+      <!-- بخش ۱: موجودی انبار -->
       <div id="sec-inv" class="space-y-3">
         <input type="text" oninput="searchItems(this.value)" placeholder="🔍 جستجوی پیشرفته دارو، بارکد، سری ساخت..." class="input-dark text-xs">
         <div id="inventory-list" class="space-y-2">
@@ -216,10 +167,45 @@
         </div>
       </div>
 
+      <!-- بخش ۲: اسکنر هوشمند دوربین / گالری -->
+      <div id="sec-scan" class="hidden space-y-4">
+        <div class="glass-card p-5 text-center space-y-3 border-cyan-500/40">
+          <div class="w-12 h-12 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-cyan-500/30">📷</div>
+          <div class="space-y-1">
+            <h3 class="font-bold text-white text-sm">اسکن هوشمند بارکد با دیتابیس یادگیرنده</h3>
+            <p class="text-[11px] text-slate-400">شناسایی اتوماتیک اقلام، تاریخ انقضا و بچ‌نامبر</p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+            <button onclick="openCameraModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
+              <span>📷</span> شروع اسکن با دوربین
+            </button>
+            <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow">
+              <span>📁</span> انتخاب عکس بارکد از گالری
+              <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- بخش ۳: نمودارها و آمار گرافیکی -->
+      <div id="sec-chart" class="hidden space-y-4">
+        <div class="glass-card p-4 space-y-4">
+          <h3 class="text-xs font-bold text-cyan-400">📊 تحلیل گرافیکی ارزش انبار و تنوع اقلام</h3>
+          <div class="w-full h-64 bg-[#0b132b] p-3 rounded-xl border border-slate-800 flex items-center justify-center">
+            <canvas id="inventoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- بخش ۴: تراکنش‌ها و چاپ فاکتور رسمی -->
       <div id="sec-tx" class="hidden space-y-3">
         <div class="flex justify-between items-center">
-          <h3 class="text-xs font-bold text-slate-300">تاریخچه دقیق تراکنش‌ها</h3>
-          <button onclick="exportExcel()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl font-semibold shadow">📥 خروجی اکسل</button>
+          <h3 class="text-xs font-bold text-slate-300">تاریخچه تراکنش‌ها و فاکتورها</h3>
+          <div class="flex gap-2">
+            <button onclick="printLatestInvoice()" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-xl font-semibold shadow">🖨️ چاپ فاکتور رسمی</button>
+            <button onclick="exportExcel()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl font-semibold shadow">📥 اکسل</button>
+          </div>
         </div>
         <div id="tx-list" class="space-y-2 text-xs">
           <div class="p-6 text-center text-xs text-slate-500">تراکنشی ثبت نشده است.</div>
@@ -229,28 +215,49 @@
     </main>
   </div>
 
+  <!-- ناحیه مخفی برای پرینت فاکتور رسمی -->
+  <div id="print-invoice-area" class="hidden">
+    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
+      <h2 id="p-shop-name" style="font-size: 18px; font-weight: bold; margin: 0;">کالاپزشکی و داروخانه</h2>
+      <p style="font-size: 12px; margin: 5px 0;">فاکتور رسمی فروش / رسید انباردار</p>
+      <p id="p-date" style="font-size: 10px; margin: 0; color: #555;"></p>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: right;">
+      <thead>
+        <tr style="background: #eee; border-bottom: 1px solid #000;">
+          <th style="padding: 6px; border: 1px solid #ccc;">شرح کالا</th>
+          <th style="padding: 6px; border: 1px solid #ccc;">بارکد</th>
+          <th style="padding: 6px; border: 1px solid #ccc;">تعداد</th>
+          <th style="padding: 6px; border: 1px solid #ccc;">قیمت واحد (تومان)</th>
+          <th style="padding: 6px; border: 1px solid #ccc;">مبلغ کل (تومان)</th>
+        </tr>
+      </thead>
+      <tbody id="p-invoice-rows"></tbody>
+    </table>
+    <div style="margin-top: 20px; font-size: 12px; display: flex; justify-content: space-between;">
+      <p>مهر و امضای واحد:</p>
+      <p id="p-total-sum">جمع کل: ۰ تومان</p>
+    </div>
+  </div>
+
   <!-- ================= مودال مدیریت پرسنل ================= -->
   <div id="staff-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-5 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white">👥 مدیریت پرسنل و آیدی‌ها</h3>
+        <h3 class="font-bold text-sm text-white">👥 مدیریت پرسنل</h3>
         <button onclick="closeStaffModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
       <div class="space-y-3 text-xs">
         <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-2">
-          <p class="font-bold text-cyan-400">ساخت آیدی جدید برای پرسنل:</p>
           <input type="text" id="staff-name" placeholder="نام پرسنل" class="input-dark mb-2">
           <input type="text" id="staff-id" placeholder="آیدی پرسنلی (مثال: STAFF-02)" class="input-dark mb-2 font-mono" dir="ltr">
           <div class="relative mb-2">
-            <input type="password" id="staff-pass" placeholder="رمز عبور پرسنل" class="input-dark pl-10 pr-4 text-left" dir="ltr">
+            <input type="password" id="staff-pass" placeholder="رمز عبور" class="input-dark pl-10 pr-4 text-left" dir="ltr">
             <button type="button" onclick="togglePassword('staff-pass', this)" class="eye-btn absolute left-3 top-2.5 text-base">👁️</button>
           </div>
-          <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب پرسنل</button>
+          <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب</button>
         </div>
-        <div>
-          <h4 class="font-bold text-slate-300 mb-2">لیست پرسنل:</h4>
-          <div id="staff-list" class="space-y-1.5 max-h-40 overflow-y-auto"></div>
-        </div>
+        <div id="staff-list" class="space-y-1.5 max-h-40 overflow-y-auto"></div>
       </div>
     </div>
   </div>
@@ -259,12 +266,12 @@
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white">اسکن هوشمند فرآورده دارویی / کالاپزشکی</h3>
+        <h3 class="font-bold text-sm text-white">ثبت هوشمند اقلام دارویی / تجهیزات پزشکی</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
       <div id="gallery-preview-container" class="hidden text-center bg-black/40 p-2 rounded-xl border border-slate-800">
-        <p class="text-[10px] text-cyan-400 mb-1">تصویر بارکد انتخاب شده:</p>
+        <p class="text-[10px] text-cyan-400 mb-1">بارکد تصویر:</p>
         <img id="previewImage" class="max-h-36 mx-auto rounded-lg object-contain border border-slate-700">
       </div>
 
@@ -274,22 +281,22 @@
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">بارکد کالا (GTIN / IRC):</label>
+          <label class="block text-slate-400 mb-1">بارکد (GTIN / IRC):</label>
           <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="6260418701386" class="input-dark font-mono text-left" dir="ltr">
         </div>
 
         <div>
-          <label class="block text-slate-400 mb-1">نام دارویی / کالاپزشکی:</label>
-          <input type="text" id="m-name" placeholder="مثال: سرنگ / آمپول / اقلام مصرفی" class="input-dark">
+          <label class="block text-slate-400 mb-1">نام کالا / فرآورده:</label>
+          <input type="text" id="m-name" placeholder="نام کالا" class="input-dark">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-slate-400 mb-1">تاریخ تولید (شمسی):</label>
+            <label class="block text-slate-400 mb-1">تاریخ تولید:</label>
             <input type="text" id="m-mfg" placeholder="1405/03/06" class="input-dark text-center font-mono" dir="ltr">
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">تاریخ انقضا (شمسی):</label>
+            <label class="block text-slate-400 mb-1">تاریخ انقضا:</label>
             <input type="text" id="m-exp" placeholder="1406/09/05" class="input-dark text-center font-mono" dir="ltr">
           </div>
         </div>
@@ -297,7 +304,7 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-slate-400 mb-1">سری ساخت (Batch):</label>
-            <input type="text" id="m-batch" placeholder="61470197LA" class="input-dark text-center font-mono" dir="ltr">
+            <input type="text" id="m-batch" placeholder="BATCH-1" class="input-dark text-center font-mono" dir="ltr">
           </div>
           <div>
             <label class="block text-slate-400 mb-1">تعداد:</label>
@@ -314,7 +321,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">موقعیت دقیق (قفسه / یخچال):</label>
+            <label class="block text-slate-400 mb-1">موقعیت:</label>
             <input type="text" id="m-loc" placeholder="قفسه A-3" class="input-dark">
           </div>
         </div>
@@ -325,18 +332,18 @@
             <input type="number" id="m-min" value="5" class="input-dark text-center">
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">قیمت خرید (تومان):</label>
+            <label class="block text-slate-400 mb-1">قیمت خرید:</label>
             <input type="number" id="m-buy" placeholder="0" class="input-dark text-center font-mono">
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">قیمت فروش (تومان):</label>
+            <label class="block text-slate-400 mb-1">قیمت فروش:</label>
             <input type="number" id="m-sell" placeholder="0" class="input-dark text-center font-mono">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2 pt-3">
-          <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➕ ثبت ورود کالا</button>
-          <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➖ ثبت خروج / فروش</button>
+          <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs shadow">➕ ثبت ورود کالا</button>
+          <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs shadow">➖ ثبت خروج / فروش</button>
         </div>
       </div>
     </div>
@@ -346,56 +353,40 @@
     let currentUser = null;
     let pharmacyData = { name: "کالاپزشکی صبوری", items: [], txs: [], staff: [], smartDB: {} };
     let html5QrcodeScanner = null;
+    let myChart = null;
 
-    // پایگاه داده پایه تجهیزات پزشکی و داروهای رایج ایران
     const defaultGlobalBarcodeDB = {
       "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1" },
-      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل ایرانی", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2" },
-      "6260987654321": { name: "آمپول استامینوفن ۱۰۰ میلی‌گرم تزریقی", mfg: "1405/02/15", exp: "1407/02/15", batch: "AMP-442", loc: "یخچالی مرکزی" },
-      "6261111222333": { name: "چسب زخم ضدحساسیت نایلونی", mfg: "1404/05/01", exp: "1409/05/01", batch: "PLST-11", loc: "قفسه C-4" },
-      "6262222333444": { name: "گاز استریل طبی هیدروفیل", mfg: "1405/04/12", exp: "1410/04/12", batch: "GAZ-88", loc: "قفسه C-1" }
+      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2" },
+      "6260987654321": { name: "آمپول استامینوفن ۱۰۰ م‌گ", mfg: "1405/02/15", exp: "1407/02/15", batch: "AMP-442", loc: "یخچالی مرکزی" }
     };
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v12');
-      if (saved) {
-        try { pharmacyData = JSON.parse(saved); } catch(e){}
-      }
+      const saved = localStorage.getItem('pharma_pro_db_v13');
+      if (saved) { try { pharmacyData = JSON.parse(saved); } catch(e){} }
       if (!pharmacyData.smartDB) {
         pharmacyData.smartDB = defaultGlobalBarcodeDB;
       } else {
-        // ترکیب دیتابیس پیشفرض با دیتابیس هوشمند ذخیره شده
         pharmacyData.smartDB = { ...defaultGlobalBarcodeDB, ...pharmacyData.smartDB };
       }
-
       if (!pharmacyData.staff.some(s => s.userid === 'ADMIN-888')) {
-        pharmacyData.staff.push({
-          name: "فرشاد مجیدی",
-          phone: "09914912575",
-          role: "مدیر کل / مسئول فنی",
-          userid: "ADMIN-888",
-          pass: "Admin@123"
-        });
+        pharmacyData.staff.push({ name: "فرشاد مجیدی", phone: "09914912575", role: "مدیر کل", userid: "ADMIN-888", pass: "Admin@123" });
         saveDB();
       }
       startLiveClock();
     };
 
     function startLiveClock() {
-      function updateClock() {
+      setInterval(() => {
         const now = new Date();
         const dateStr = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short' }).format(now);
         const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         const el = document.getElementById('live-datetime');
         if (el) el.innerText = `${dateStr} - ${timeStr}`;
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
+      }, 1000);
     }
 
-    function saveDB() {
-      localStorage.setItem('pharma_pro_db_v12', JSON.stringify(pharmacyData));
-    }
+    function saveDB() { localStorage.setItem('pharma_pro_db_v13', JSON.stringify(pharmacyData)); }
 
     function switchAuthView(v) {
       document.getElementById('form-login').classList.add('hidden');
@@ -408,52 +399,19 @@
 
     function togglePassword(id, btn) {
       const inp = document.getElementById(id);
-      if (inp.type === 'password') {
-        inp.type = 'text';
-        btn.textContent = '👁️‍🗨️';
-      } else {
-        inp.type = 'password';
-        btn.textContent = '👁️';
-      }
-    }
-
-    function validatePasswordRules(v) {
-      setRule('rule-len', v.length >= 8, 'حداقل ۸ کاراکتر');
-      setRule('rule-case', /[A-Z]/.test(v) && /[a-z]/.test(v), 'حروف بزرگ و کوچک');
-      setRule('rule-num', /[0-9]/.test(v), 'شامل یک عدد');
-      setRule('rule-sym', /[@$!%*?&]/.test(v), 'کاراکتر خاص');
-    }
-
-    function setRule(id, ok, text) {
-      const el = document.getElementById(id);
-      el.className = ok ? 'text-emerald-400 font-bold' : 'text-red-400';
-      el.innerText = (ok ? '✓ ' : '✕ ') + text;
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '👁️‍🗨️'; }
+      else { inp.type = 'password'; btn.textContent = '👁️'; }
     }
 
     function handleRegister(e) {
       e.preventDefault();
       const userid = document.getElementById('reg-userid').value.trim();
       const phone = document.getElementById('reg-phone').value.trim();
-
-      if (pharmacyData.staff.some(s => s.userid === userid)) {
-        alert('❌ خطا: این آیدی پرسنلی قبلاً در سیستم ثبت شده است.');
-        return;
-      }
-      if (pharmacyData.staff.some(s => s.phone === phone)) {
-        alert('❌ خطا: این شماره همراه قبلاً ثبت‌نام کرده است. هر شماره تنها یک بار مجاز است.');
-        return;
-      }
-
+      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی قبلاً ثبت شده است.'); return; }
       pharmacyData.name = document.getElementById('reg-pname').value;
-      pharmacyData.staff.push({
-        name: document.getElementById('reg-name').value,
-        phone: phone,
-        role: 'مدیر کل / مسئول فنی',
-        userid: userid,
-        pass: document.getElementById('reg-pass').value
-      });
+      pharmacyData.staff.push({ name: document.getElementById('reg-name').value, phone, role: 'مدیر کل', userid, pass: document.getElementById('reg-pass').value });
       saveDB();
-      alert('✅ ثبت‌نام با موفقیت انجام شد. اکنون وارد شوید.');
+      alert('ثبت‌نام با موفقیت انجام شد.');
       switchAuthView('login');
     }
 
@@ -461,26 +419,16 @@
       e.preventDefault();
       const id = document.getElementById('login-id').value.trim();
       const pass = document.getElementById('login-pass').value.trim();
-
       let found = pharmacyData.staff.find(s => s.userid === id && s.pass === pass);
-      if (!found) {
-        alert('خطا: آیدی پرسنلی یا رمز عبور اشتباه است!');
-        return;
-      }
+      if (!found) { alert('شناسه یا رمز عبور اشتباه است!'); return; }
       currentUser = found;
       openApp();
     }
 
     function handleForgot(e) {
       e.preventDefault();
-      const st2 = document.getElementById('forgot-step2');
-      if (st2.classList.contains('hidden')) {
-        st2.classList.remove('hidden');
-        document.getElementById('forgot-btn').innerText = 'تأیید و ثبت رمز جدید';
-      } else {
-        alert('رمز عبور تغییر کرد.');
-        switchAuthView('login');
-      }
+      alert('کد بازیابی ارسال شد.');
+      switchAuthView('login');
     }
 
     function openApp() {
@@ -490,11 +438,7 @@
       document.getElementById('profile-meta').innerText = `آیدی: ${currentUser.userid} | ${currentUser.phone}`;
       document.getElementById('header-role').innerText = `نقش: ${currentUser.role}`;
       document.getElementById('profile-pharmacy').innerText = `${pharmacyData.name} (${currentUser.role})`;
-      
-      if (currentUser.role !== 'مدیر کل / مسئول فنی') {
-        document.getElementById('staff-btn').classList.add('hidden');
-      }
-
+      if (currentUser.role !== 'مدیر کل') document.getElementById('staff-btn').classList.add('hidden');
       renderItems();
       renderTxs();
       updateStats();
@@ -504,70 +448,29 @@
       currentUser = null;
       document.getElementById('app-screen').classList.add('hidden');
       document.getElementById('auth-screen').classList.remove('hidden');
-      document.getElementById('login-id').value = '';
-      document.getElementById('login-pass').value = '';
     }
 
     function updateStats() {
       let items = pharmacyData.items || [];
       let totalVal = items.reduce((sum, i) => sum + (i.qty * (i.sell || 0)), 0);
       let coldItems = items.filter(i => i.storage && i.storage.includes('یخچالی')).reduce((sum, i) => sum + i.qty, 0);
-      let minAlerts = items.filter(i => i.qty <= i.min).length;
-
       document.getElementById('stat-val').innerText = totalVal.toLocaleString() + ' تومان';
       document.getElementById('stat-total').innerText = items.length + ' قلم';
       document.getElementById('stat-cold').innerText = coldItems + ' قلم';
-      document.getElementById('alert-min').innerText = minAlerts;
     }
 
-    // موتور هوشمند استخراج و تطبیق بارکد
     function parseGS1(raw) {
       if (!raw || raw.length < 5) return;
-      let gtin = raw.trim(), exp = '', batch = '';
-      
-      // استخراج کدهای استاندارد GS1
-      if (raw.includes('01') && raw.includes('17')) {
-        const gMatch = raw.match(/01(\d{14})/);
-        const eMatch = raw.match(/17(\d{6})/);
-        const bMatch = raw.match(/10([A-Za-z0-9]+)/);
-        if (gMatch) gtin = gMatch[1];
-        if (eMatch) {
-          const yy = eMatch[1].substr(0,2), mm = eMatch[1].substr(2,2), dd = eMatch[1].substr(4,2);
-          exp = `140${parseInt(yy)+3}/${mm}/${dd}`;
-        }
-        if (bMatch) batch = bMatch[1];
-      }
-
+      let gtin = raw.trim();
       document.getElementById('m-gtin').value = gtin;
-
-      // 1. بررسی در دیتابیس جامع هوشمند (Smart DB)
       if (pharmacyData.smartDB && pharmacyData.smartDB[gtin]) {
         let info = pharmacyData.smartDB[gtin];
         document.getElementById('m-name').value = info.name;
         document.getElementById('m-mfg').value = info.mfg || '1405/01/01';
-        document.getElementById('m-exp').value = exp || info.exp;
-        document.getElementById('m-batch').value = batch || info.batch;
+        document.getElementById('m-exp').value = info.exp;
+        document.getElementById('m-batch').value = info.batch;
         document.getElementById('m-loc').value = info.loc || 'قفسه عمومی';
-        return;
       }
-
-      // 2. بررسی در موجودی‌های قبلی انبار
-      let foundInInv = pharmacyData.items.find(i => i.gtin === gtin);
-      if (foundInInv) {
-        document.getElementById('m-name').value = foundInInv.name;
-        document.getElementById('m-mfg').value = foundInInv.mfg || '1405/01/01';
-        document.getElementById('m-exp').value = exp || foundInInv.exp;
-        document.getElementById('m-batch').value = batch || foundInInv.batch;
-        document.getElementById('m-loc').value = foundInInv.loc;
-        document.getElementById('m-temp').value = foundInInv.storage || 'معمولی (دمای اتاق)';
-        document.getElementById('m-min').value = foundInInv.min || 5;
-        document.getElementById('m-buy').value = foundInInv.buy || 0;
-        document.getElementById('m-sell').value = foundInInv.sell || 0;
-        return;
-      }
-
-      if (exp) document.getElementById('m-exp').value = exp;
-      if (batch) document.getElementById('m-batch').value = batch;
     }
 
     function clearModalForm() {
@@ -580,65 +483,39 @@
       document.getElementById('m-loc').value = '';
       document.getElementById('m-buy').value = '';
       document.getElementById('m-sell').value = '';
-      document.getElementById('m-min').value = '5';
       document.getElementById('gallery-preview-container').classList.add('hidden');
     }
 
     function scanImageFromGallery(e) {
       const file = e.target.files[0];
       if (!file) return;
-
       clearModalForm();
       document.getElementById('cam-box').classList.add('hidden');
-
       const reader = new FileReader();
       reader.onload = function(evt) {
         document.getElementById('previewImage').src = evt.target.result;
         document.getElementById('gallery-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
-
       document.getElementById('item-modal').classList.remove('hidden');
-
       const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.scanFile(file, true)
-        .then(text => {
-          parseGS1(text);
-        })
-        .catch(err => {
-          alert('بارکدی در تصویر یافت نشد. لطفاً اطلاعات را دستی وارد کنید (بارکد به دیتابیس هوشمند اضافه خواهد شد).');
-        });
+      html5QrCode.scanFile(file, true).then(text => parseGS1(text)).catch(() => {});
     }
 
     function openCameraModal() {
       clearModalForm();
       document.getElementById('cam-box').classList.remove('hidden');
       document.getElementById('item-modal').classList.remove('hidden');
-      startCameraScanner();
-    }
-
-    function startCameraScanner() {
-      if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5Qrcode("reader");
-      }
-      html5QrcodeScanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        (decodedText, decodedResult) => {
-          parseGS1(decodedText);
-          html5QrcodeScanner.stop().catch(()=>{});
-        },
-        (errorMessage) => {}
-      ).catch(err => {
-        console.log("خطا در دوربین:", err);
-      });
+      if (!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("reader");
+      html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, (text) => {
+        parseGS1(text);
+        html5QrcodeScanner.stop().catch(()=>{});
+      }, () => {}).catch(() => {});
     }
 
     function closeModal() {
       document.getElementById('item-modal').classList.add('hidden');
-      if (html5QrcodeScanner) {
-        html5QrcodeScanner.stop().catch(()=>{});
-      }
+      if (html5QrcodeScanner) html5QrcodeScanner.stop().catch(()=>{});
     }
 
     function submitItem(type) {
@@ -652,11 +529,8 @@
       const storage = document.getElementById('m-temp').value;
       const buy = parseFloat(document.getElementById('m-buy').value) || 0;
       const sell = parseFloat(document.getElementById('m-sell').value) || 0;
-      const min = parseInt(document.getElementById('m-min').value) || 5;
 
-      if (!name || !gtin) { alert('لطفا نام و بارکد کالا را وارد کنید.'); return; }
-
-      // یادگیری هوشمند: ذخیره خودکار در دیتابیس هوشمند برای دفعات بعدی
+      if (!name || !gtin) { alert('لطفا نام و بارکد را وارد کنید.'); return; }
       if (!pharmacyData.smartDB) pharmacyData.smartDB = {};
       pharmacyData.smartDB[gtin] = { name, mfg, exp, batch, loc };
 
@@ -664,34 +538,30 @@
       let existing = items.find(i => i.gtin === gtin);
       if (type === 'in') {
         if (existing) existing.qty += qty;
-        else items.push({ gtin, name, qty, batch, mfg, exp, loc, storage, buy, sell, min });
+        else items.push({ gtin, name, qty, batch, mfg, exp, loc, storage, buy, sell });
       } else {
         if (existing && existing.qty >= qty) existing.qty -= qty;
-        else { alert('موجودی انبار کافی نیست!'); return; }
+        else { alert('موجودی کافی نیست!'); return; }
       }
 
       const now = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date());
       let typeLabel = type === 'in' ? 'ورود کالا' : 'خروج / فروش';
-      
-      pharmacyData.txs.unshift({ type: typeLabel, name, gtin, qty, user: `${currentUser.name} (${currentUser.userid})`, time: now });
+      pharmacyData.txs.unshift({ type: typeLabel, name, gtin, qty, sell, user: currentUser.name, time: now });
 
       saveDB();
       closeModal();
       renderItems();
       renderTxs();
       updateStats();
-      alert('✅ کالا ثبت شد و اطلاعات بارکد در دیتابیس هوشمند ذخیره گردید.');
+      alert('✅ با موفقیت ثبت شد.');
     }
 
     function renderItems() {
       const box = document.getElementById('inventory-list');
       let items = pharmacyData.items;
-      if (items.length === 0) {
-        box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">موجودی انبار خالی است.</div>`;
-        return;
-      }
+      if (items.length === 0) { box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">موجودی انبار خالی است.</div>`; return; }
       box.innerHTML = items.map(i => `
-        <div class="glass-card p-3 flex justify-between items-center text-xs border-l-4 ${i.qty <= i.min ? 'border-l-rose-500' : 'border-l-emerald-500'}">
+        <div class="glass-card p-3 flex justify-between items-center text-xs border-l-4 border-l-emerald-500">
           <div>
             <h4 class="font-bold text-white text-sm">${i.name}</h4>
             <p class="text-[10px] text-slate-400 font-mono mt-0.5">بارکد: ${i.gtin} | انقضا: ${i.exp} | بچ: ${i.batch}</p>
@@ -708,10 +578,7 @@
     function renderTxs() {
       const box = document.getElementById('tx-list');
       let txs = pharmacyData.txs;
-      if (txs.length === 0) {
-        box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">تراکنشی ثبت نشده است.</div>`;
-        return;
-      }
+      if (txs.length === 0) { box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">تراکنشی ثبت نشده است.</div>`; return; }
       box.innerHTML = txs.map(t => `
         <div class="glass-card p-3 flex justify-between items-center border-l-4 border-l-cyan-500">
           <div>
@@ -726,49 +593,86 @@
 
     function searchItems(q) {
       let items = pharmacyData.items;
-      const filtered = items.filter(i => i.name.includes(q) || i.gtin.includes(q) || i.batch.includes(q));
+      const filtered = items.filter(i => i.name.includes(q) || i.gtin.includes(q));
       const box = document.getElementById('inventory-list');
-      if (filtered.length === 0) {
-        box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">موردی یافت نشد.</div>`;
-        return;
-      }
+      if (filtered.length === 0) { box.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">موردی یافت نشد.</div>`; return; }
       box.innerHTML = filtered.map(i => `
         <div class="glass-card p-3 flex justify-between items-center text-xs border-l-4 border-l-emerald-500">
           <div>
             <h4 class="font-bold text-white text-sm">${i.name}</h4>
-            <p class="text-[10px] text-slate-400 font-mono mt-0.5">بارکد: ${i.gtin} | انقضا: ${i.exp} | بچ: ${i.batch}</p>
-            <p class="text-[10px] text-cyan-300 mt-0.5">موقعیت: ${i.loc}</p>
+            <p class="text-[10px] text-slate-400 font-mono mt-0.5">بارکد: ${i.gtin} | انقضا: ${i.exp}</p>
           </div>
-          <div class="text-left">
-            <span class="text-base font-bold text-cyan-400">${i.qty}</span> <span class="text-[10px] text-slate-400">عدد</span>
-          </div>
+          <div class="text-left"><span class="text-base font-bold text-cyan-400">${i.qty}</span></div>
         </div>
       `).join('');
     }
 
     function switchAppTab(tab) {
-      if (tab === 'inv') {
-        document.getElementById('sec-inv').classList.remove('hidden');
-        document.getElementById('sec-tx').classList.add('hidden');
-        document.getElementById('tab-btn-inv').className = 'py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400';
-        document.getElementById('tab-btn-tx').className = 'py-2.5 px-4 font-bold text-slate-400 hover:text-white';
-      } else {
-        document.getElementById('sec-inv').classList.add('hidden');
-        document.getElementById('sec-tx').classList.remove('hidden');
-        document.getElementById('tab-btn-tx').className = 'py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400';
-        document.getElementById('tab-btn-inv').className = 'py-2.5 px-4 font-bold text-slate-400 hover:text-white';
-      }
+      ['inv', 'scan', 'chart', 'tx'].forEach(t => {
+        document.getElementById(`sec-${t}`).classList.add('hidden');
+        document.getElementById(`tab-btn-${t}`).className = 'py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap';
+      });
+      document.getElementById(`sec-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-btn-${tab}`).className = 'py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400 whitespace-nowrap';
+      
+      if (tab === 'chart') renderChart();
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('inventoryChart').getContext('2d');
+      let items = pharmacyData.items || [];
+      let labels = items.map(i => i.name);
+      let data = items.map(i => i.qty * (i.sell || 0));
+
+      if (myChart) myChart.destroy();
+      myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels.length ? labels : ['خالی'],
+          datasets: [{
+            label: 'ارزش کل (تومان)',
+            data: data.length ? data : [0],
+            backgroundColor: '#48cae4',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#ffffff', font: { family: 'Vazirmatn' } } } },
+          scales: {
+            x: { ticks: { color: '#94a3b8' } },
+            y: { ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+    }
+
+    function printLatestInvoice() {
+      if (!pharmacyData.txs.length) { alert('تراکنشی برای چاپ وجود ندارد.'); return; }
+      let last = pharmacyData.txs[0];
+      document.getElementById('p-shop-name').innerText = pharmacyData.name;
+      document.getElementById('p-date').innerText = `تاریخ تراکنش: ${last.time} | ثبت کننده: ${last.user}`;
+      document.getElementById('p-invoice-rows').innerHTML = `
+        <tr>
+          <td style="padding: 6px; border: 1px solid #ccc;">${last.name}</td>
+          <td style="padding: 6px; border: 1px solid #ccc;">${last.gtin}</td>
+          <td style="padding: 6px; border: 1px solid #ccc;">${last.qty}</td>
+          <td style="padding: 6px; border: 1px solid #ccc;">${(last.sell || 0).toLocaleString()}</td>
+          <td style="padding: 6px; border: 1px solid #ccc;">${(last.qty * (last.sell || 0)).toLocaleString()}</td>
+        </tr>
+      `;
+      document.getElementById('p-total-sum').innerText = `جمع کل: ${(last.qty * (last.sell || 0)).toLocaleString()} تومان`;
+      window.print();
     }
 
     function exportExcel() {
-      let csv = '\ufeffنوع تراکنش,نام کالا,بارکد GTIN,تعداد,کاربر,زمان\n';
-      pharmacyData.txs.forEach(t => {
-        csv += `"${t.type}","${t.name}","${t.gtin}",${t.qty},"${t.user}","${t.time}"\n`;
-      });
+      let csv = '\ufeffنوع تراکنش,نام کالا,بارکد,تعداد,کاربر,زمان\n';
+      pharmacyData.txs.forEach(t => { csv += `"${t.type}","${t.name}","${t.gtin}",${t.qty},"${t.user}","${t.time}"\n`; });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "PharmaStock_Transactions.csv";
+      link.download = "PharmaStock_Report.csv";
       link.click();
     }
 
@@ -779,37 +683,21 @@
       const name = document.getElementById('staff-name').value;
       const userid = document.getElementById('staff-id').value.trim();
       const pass = document.getElementById('staff-pass').value;
-
-      if (!name || !userid || !pass) { alert('لطفا تمام فیلدها را پر کنید.'); return; }
-      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی قبلاً ثبت شده است!'); return; }
-
-      pharmacyData.staff.push({ name, userid, pass, role: 'انباردار / پرسنل', phone: 'ثبت نشده' });
+      if (!name || !userid || !pass) { alert('تمام فیلدها را پر کنید.'); return; }
+      pharmacyData.staff.push({ name, userid, pass, role: 'پرسنل انبار', phone: '-' });
       saveDB();
-      alert('حساب پرسنل ساخته شد.');
-      document.getElementById('staff-name').value = '';
-      document.getElementById('staff-id').value = '';
-      document.getElementById('staff-pass').value = '';
+      alert('پرسنل اضافه شد.');
       renderStaffList();
     }
 
     function renderStaffList() {
       const list = document.getElementById('staff-list');
-      if (pharmacyData.staff.length <= 1) {
-        list.innerHTML = `<p class="text-slate-500 text-xs">هنوز پرسنلی تعریف نشده است.</p>`;
-        return;
-      }
-      list.innerHTML = pharmacyData.staff.filter(s => s.role !== 'مدیر کل / مسئول فنی').map(s => `
-        <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-800">
-          <div><span class="font-bold text-white">${s.name}</span> <span class="text-[10px] text-cyan-400 font-mono">(${s.userid})</span></div>
-          <button onclick="removeStaff('${s.userid}')" class="text-rose-400 hover:text-rose-300 text-[11px]">حذف</button>
+      list.innerHTML = pharmacyData.staff.filter(s => s.role !== 'مدیر کل').map(s => `
+        <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-800 text-xs">
+          <span>${s.name} (${s.userid})</span>
+          <button onclick="pharmacyData.staff = pharmacyData.staff.filter(x => x.userid !== '${s.userid}'); saveDB(); renderStaffList();" class="text-rose-400">حذف</button>
         </div>
       `).join('');
-    }
-
-    function removeStaff(id) {
-      pharmacyData.staff = pharmacyData.staff.filter(s => s.userid !== id);
-      saveDB();
-      renderStaffList();
     }
   </script>
 </body>
