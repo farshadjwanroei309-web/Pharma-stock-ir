@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سامانه جامع مدیریت داروخانه و تجهیزات پزشکی - PharmaStock Pro</title>
+  <title>سامانه جامع مدیریت داروخانه و کالاپزشکی - PharmaStock Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
@@ -23,7 +23,7 @@
       
       <div class="text-center space-y-2">
         <div class="w-14 h-14 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold border border-cyan-500/30">🏥</div>
-        <h2 id="auth-title" class="text-xl font-bold text-white">ورود به سامانه انبار دارویی</h2>
+        <h2 id="auth-title" class="text-xl font-bold text-white">ورود به سامانه انبار</h2>
         <p id="auth-subtitle" class="text-xs text-slate-400">بدون نیاز به فیلترشکن (سازگار با نت ملی)</p>
       </div>
 
@@ -49,10 +49,18 @@
         </div>
       </form>
 
-      <!-- فرم ثبت‌‌نام -->
+      <!-- فرم ثبت‌‌نام (با عنوان جدید کالاپزشکی) -->
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
+        <div class="text-center pb-1">
+          <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5">مختص داروخانه‌ها، مراکز درمانی و کالاپزشکی (بدون نیاز به فیلترشکن)</p>
+        </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">نام و نام خانوادگی:</label>
+          <label class="block text-xs text-slate-300 mb-1">نام داروخانه / مرکز درمانی / کالاپزشکی:</label>
+          <input type="text" id="reg-pname" placeholder="کالاپزشکی صبوری" required class="input-dark">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">نام و نام خانوادگی مدیر کل:</label>
           <input type="text" id="reg-name" placeholder="فرشاد مجید" required class="input-dark">
         </div>
         <div>
@@ -132,7 +140,6 @@
       <div class="glass-card p-4 space-y-3 border-amber-500/30 bg-amber-500/5">
         <div class="flex justify-between items-center">
           <span class="text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-lg font-semibold">دسترسی ارشد</span>
-          <!-- تاریخ و زمان اتوماتیک و زنده -->
           <span class="text-[10px] text-cyan-300 font-mono font-bold" id="live-datetime">در حال بارگذاری زمان...</span>
         </div>
         <div class="bg-[#0b132b] p-3.5 rounded-xl border border-slate-800 space-y-1">
@@ -142,7 +149,7 @@
         </div>
       </div>
 
-      <!-- ۳ کارت آماری اصلی (ارزش انبار، کل اقلام، داروی یخچالی) -->
+      <!-- ۳ کارت آماری اصلی -->
       <div class="grid grid-cols-3 gap-2.5">
         <div class="glass-card p-3 text-center space-y-1 border-cyan-500/30">
           <p class="text-[10px] text-slate-400">ارزش انبار</p>
@@ -189,12 +196,6 @@
         <button onclick="openModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
           <span>📷</span> شروع اسکن با دوربین / ورود دستی
         </button>
-        <div class="text-left pt-1">
-          <label class="text-[11px] text-cyan-400 cursor-pointer hover:underline block text-center">
-            📁 یا انتخاب عکس بارکد از گالری
-            <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
-          </label>
-        </div>
       </div>
 
       <!-- تب‌ها و لیست موجودی / تراکنش‌ها -->
@@ -243,8 +244,8 @@
         </div>
 
         <div>
-          <label class="block text-slate-400 mb-1">نام دارویی / کالا:</label>
-          <input type="text" id="m-name" placeholder="مثال: حریره بادام سرلاک" class="input-dark">
+          <label class="block text-slate-400 mb-1">نام دارویی / کالاپزشکی:</label>
+          <input type="text" id="m-name" placeholder="مثال: سرنگ / آمپول / تجهیزات" class="input-dark">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -317,7 +318,7 @@
     let html5QrcodeScanner = null;
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v3');
+      const saved = localStorage.getItem('pharma_pro_db_v4');
       if (saved) {
         try {
           const data = JSON.parse(saved);
@@ -329,7 +330,6 @@
       startLiveClock();
     };
 
-    // تابع نمایش تاریخ و ساعت زنده اتوماتیک (شمسی)
     function startLiveClock() {
       function updateClock() {
         const now = new Date();
@@ -343,7 +343,7 @@
     }
 
     function saveDB() {
-      localStorage.setItem('pharma_pro_db_v3', JSON.stringify({ items, txs }));
+      localStorage.setItem('pharma_pro_db_v4', JSON.stringify({ items, txs }));
       updateStats();
     }
 
@@ -454,15 +454,6 @@
       if (gtin) document.getElementById('m-gtin').value = gtin;
       if (exp) document.getElementById('m-exp').value = exp;
       if (batch) document.getElementById('m-batch').value = batch;
-    }
-
-    function scanImageFromGallery(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.scanFile(file, true)
-        .then(text => { parseGS1(text); openModal(); alert('بارکد خوانده شد: ' + text); })
-        .catch(err => { alert('بارکدی در تصویر یافت نشد.'); });
     }
 
     function openModal() {
