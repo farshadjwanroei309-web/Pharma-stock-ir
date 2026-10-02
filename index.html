@@ -26,7 +26,7 @@
       <div class="text-center space-y-2">
         <div class="w-14 h-14 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold border border-cyan-500/30">🏥</div>
         <h2 id="auth-title" class="text-xl font-bold text-white">ورود به سامانه انبار</h2>
-        <p id="auth-subtitle" class="text-xs text-slate-400">بدون نیاز به فیلترشکن (سازگار با نت ملی)</p>
+        <p id="auth-subtitle" class="text-xs text-slate-400">سیستم هوشمند انبارداری و ثبت تجهیزات</p>
       </div>
 
       <!-- فرم ورود -->
@@ -54,7 +54,7 @@
       <!-- فرم ثبت‌نام -->
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
         <div class="text-center pb-1">
-          <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه، مرکز درمانی و کالاپزشکی</h3>
+          <h3 class="font-bold text-sm text-emerald-400">ثبت‌نام داروخانه / کالاپزشکی</h3>
           <p class="text-[10px] text-slate-400 mt-0.5">کنترل یکتا بودن شماره همراه و آیدی</p>
         </div>
         <div>
@@ -66,7 +66,7 @@
           <input type="text" id="reg-name" value="فرشاد مجیدی" required class="input-dark">
         </div>
         <div>
-          <label class="block text-xs text-slate-300 mb-1">شماره همراه (یکتا):</label>
+          <label class="block text-xs text-slate-300 mb-1">شماره همراه (یکتا - فقط یک بار):</label>
           <input type="tel" id="reg-phone" placeholder="09914912575" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
@@ -124,7 +124,7 @@
         <div class="w-9 h-9 bg-cyan-500/20 text-cyan-400 rounded-xl flex items-center justify-center font-bold">💎</div>
         <div>
           <h1 class="font-bold text-xs text-white">سامانه هوشمند انبار</h1>
-          <p id="header-role" class="text-[10px] text-slate-400">نقش: مدیر کل / مسئول فنی</p>
+          <p id="header-role" class="text-[10px] text-slate-400">نقش: مدیر کل</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -189,8 +189,8 @@
       <div class="glass-card p-5 text-center space-y-3 border-cyan-500/40">
         <div class="w-12 h-12 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-cyan-500/30">📷</div>
         <div class="space-y-1">
-          <h3 class="font-bold text-white text-sm">اسکن هوشمند بارکد خطی و مربعی TTAC / GS1</h3>
-          <p class="text-[11px] text-slate-400">تشخیص اتوماتیک نام محصول، تاریخ تولید و انقضا از دیتابیس جامع بارکدها</p>
+          <h3 class="font-bold text-white text-sm">اسکن هوشمند بارکد (پایگاه داده جامع و دیتابیس هوشمند)</h3>
+          <p class="text-[11px] text-slate-400">شناخیص اتوماتیک اقلام، تاریخ انقضا و بچ‌نامبر با یک اسکن ساده</p>
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
@@ -259,30 +259,28 @@
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white">اسکن و ثبت فرآورده دارویی / کالاپزشکی (GS1)</h3>
+        <h3 class="font-bold text-sm text-white">اسکن هوشمند فرآورده دارویی / کالاپزشکی</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
-      <!-- کادر پیش‌نمایش عکس گالری با سایز کنترل‌شده و کاملاً تفکیک‌شده از دوربین -->
       <div id="gallery-preview-container" class="hidden text-center bg-black/40 p-2 rounded-xl border border-slate-800">
         <p class="text-[10px] text-cyan-400 mb-1">تصویر بارکد انتخاب شده:</p>
         <img id="previewImage" class="max-h-36 mx-auto rounded-lg object-contain border border-slate-700">
       </div>
 
-      <!-- کادر دوربین که هنگام آپلود عکس کاملاً مخفی می‌شود تا جای خالی سیاهی نیندازد -->
       <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black">
         <div id="reader" class="w-full"></div>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">بارکد کالا (GTIN):</label>
+          <label class="block text-slate-400 mb-1">بارکد کالا (GTIN / IRC):</label>
           <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="6260418701386" class="input-dark font-mono text-left" dir="ltr">
         </div>
 
         <div>
           <label class="block text-slate-400 mb-1">نام دارویی / کالاپزشکی:</label>
-          <input type="text" id="m-name" placeholder="مثال: سرنگ / آمپول / تجهیزات" class="input-dark">
+          <input type="text" id="m-name" placeholder="مثال: سرنگ / آمپول / اقلام مصرفی" class="input-dark">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -340,30 +338,36 @@
           <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➕ ثبت ورود کالا</button>
           <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-1 shadow">➖ ثبت خروج / فروش</button>
         </div>
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <button onclick="submitItem('waste')" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">🗑 ثبت ضایعات</button>
-          <button onclick="submitItem('return')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">↩️ ثبت مرجوعی</button>
-        </div>
       </div>
     </div>
   </div>
 
   <script>
     let currentUser = null;
-    let pharmacyData = { name: "کالاپزشکی صبوری", items: [], txs: [], staff: [] };
+    let pharmacyData = { name: "کالاپزشکی صبوری", items: [], txs: [], staff: [], smartDB: {} };
     let html5QrcodeScanner = null;
 
-    const globalBarcodeDB = {
+    // پایگاه داده پایه تجهیزات پزشکی و داروهای رایج ایران
+    const defaultGlobalBarcodeDB = {
       "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1" },
-      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2" },
-      "6260987654321": { name: "آمپول استامینوفن تزریقی", mfg: "1405/02/15", exp: "1407/02/15", batch: "AMP-442", loc: "یخچالی مرکزی" }
+      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل ایرانی", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2" },
+      "6260987654321": { name: "آمپول استامینوفن ۱۰۰ میلی‌گرم تزریقی", mfg: "1405/02/15", exp: "1407/02/15", batch: "AMP-442", loc: "یخچالی مرکزی" },
+      "6261111222333": { name: "چسب زخم ضدحساسیت نایلونی", mfg: "1404/05/01", exp: "1409/05/01", batch: "PLST-11", loc: "قفسه C-4" },
+      "6262222333444": { name: "گاز استریل طبی هیدروفیل", mfg: "1405/04/12", exp: "1410/04/12", batch: "GAZ-88", loc: "قفسه C-1" }
     };
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v11');
+      const saved = localStorage.getItem('pharma_pro_db_v12');
       if (saved) {
         try { pharmacyData = JSON.parse(saved); } catch(e){}
       }
+      if (!pharmacyData.smartDB) {
+        pharmacyData.smartDB = defaultGlobalBarcodeDB;
+      } else {
+        // ترکیب دیتابیس پیشفرض با دیتابیس هوشمند ذخیره شده
+        pharmacyData.smartDB = { ...defaultGlobalBarcodeDB, ...pharmacyData.smartDB };
+      }
+
       if (!pharmacyData.staff.some(s => s.userid === 'ADMIN-888')) {
         pharmacyData.staff.push({
           name: "فرشاد مجیدی",
@@ -390,7 +394,7 @@
     }
 
     function saveDB() {
-      localStorage.setItem('pharma_pro_db_v11', JSON.stringify(pharmacyData));
+      localStorage.setItem('pharma_pro_db_v12', JSON.stringify(pharmacyData));
     }
 
     function switchAuthView(v) {
@@ -426,32 +430,28 @@
       el.innerText = (ok ? '✓ ' : '✕ ') + text;
     }
 
-    // بررسی یکتا بودن شماره همراه و آیدی پرسنلی در ثبت‌نام
     function handleRegister(e) {
       e.preventDefault();
       const userid = document.getElementById('reg-userid').value.trim();
       const phone = document.getElementById('reg-phone').value.trim();
 
       if (pharmacyData.staff.some(s => s.userid === userid)) {
-        alert('❌ خطا: این آیدی پرسنلی قبلاً در سیستم ثبت شده است. لطفاً آیدی دیگری انتخاب کنید.');
+        alert('❌ خطا: این آیدی پرسنلی قبلاً در سیستم ثبت شده است.');
         return;
       }
-
       if (pharmacyData.staff.some(s => s.phone === phone)) {
-        alert('❌ خطا: این شماره همراه قبلاً برای ثبت‌‌نام استفاده شده است. هر شماره تنها یک بار اجازه ثبت‌نام دارد.');
+        alert('❌ خطا: این شماره همراه قبلاً ثبت‌نام کرده است. هر شماره تنها یک بار مجاز است.');
         return;
       }
 
       pharmacyData.name = document.getElementById('reg-pname').value;
-      const newAdmin = {
+      pharmacyData.staff.push({
         name: document.getElementById('reg-name').value,
         phone: phone,
         role: 'مدیر کل / مسئول فنی',
         userid: userid,
         pass: document.getElementById('reg-pass').value
-      };
-
-      pharmacyData.staff.push(newAdmin);
+      });
       saveDB();
       alert('✅ ثبت‌نام با موفقیت انجام شد. اکنون وارد شوید.');
       switchAuthView('login');
@@ -464,10 +464,9 @@
 
       let found = pharmacyData.staff.find(s => s.userid === id && s.pass === pass);
       if (!found) {
-        alert('خطا: آیدی پرسنلی یا رمز عبور اشتباه است یا در سیستم ثبت نشده است!');
+        alert('خطا: آیدی پرسنلی یا رمز عبور اشتباه است!');
         return;
       }
-
       currentUser = found;
       openApp();
     }
@@ -521,10 +520,12 @@
       document.getElementById('alert-min').innerText = minAlerts;
     }
 
+    // موتور هوشمند استخراج و تطبیق بارکد
     function parseGS1(raw) {
-      if (!raw || raw.length < 8) return;
-      let gtin = raw, exp = '', batch = '';
+      if (!raw || raw.length < 5) return;
+      let gtin = raw.trim(), exp = '', batch = '';
       
+      // استخراج کدهای استاندارد GS1
       if (raw.includes('01') && raw.includes('17')) {
         const gMatch = raw.match(/01(\d{14})/);
         const eMatch = raw.match(/17(\d{6})/);
@@ -539,22 +540,24 @@
 
       document.getElementById('m-gtin').value = gtin;
 
-      if (globalBarcodeDB[gtin]) {
-        let info = globalBarcodeDB[gtin];
+      // 1. بررسی در دیتابیس جامع هوشمند (Smart DB)
+      if (pharmacyData.smartDB && pharmacyData.smartDB[gtin]) {
+        let info = pharmacyData.smartDB[gtin];
         document.getElementById('m-name').value = info.name;
-        document.getElementById('m-mfg').value = info.mfg;
-        document.getElementById('m-exp').value = info.exp;
-        document.getElementById('m-batch').value = info.batch;
-        document.getElementById('m-loc').value = info.loc;
+        document.getElementById('m-mfg').value = info.mfg || '1405/01/01';
+        document.getElementById('m-exp').value = exp || info.exp;
+        document.getElementById('m-batch').value = batch || info.batch;
+        document.getElementById('m-loc').value = info.loc || 'قفسه عمومی';
         return;
       }
 
+      // 2. بررسی در موجودی‌های قبلی انبار
       let foundInInv = pharmacyData.items.find(i => i.gtin === gtin);
       if (foundInInv) {
         document.getElementById('m-name').value = foundInInv.name;
         document.getElementById('m-mfg').value = foundInInv.mfg || '1405/01/01';
-        document.getElementById('m-exp').value = foundInInv.exp;
-        document.getElementById('m-batch').value = foundInInv.batch;
+        document.getElementById('m-exp').value = exp || foundInInv.exp;
+        document.getElementById('m-batch').value = batch || foundInInv.batch;
         document.getElementById('m-loc').value = foundInInv.loc;
         document.getElementById('m-temp').value = foundInInv.storage || 'معمولی (دمای اتاق)';
         document.getElementById('m-min').value = foundInInv.min || 5;
@@ -586,11 +589,8 @@
       if (!file) return;
 
       clearModalForm();
-
-      // پنهان کردن کادر دوربین تا هیچ کادر سیاه بزرگی ایجاد نشود
       document.getElementById('cam-box').classList.add('hidden');
 
-      // نمایش عکس در کادر کنترل‌شده کوچک بالا
       const reader = new FileReader();
       reader.onload = function(evt) {
         document.getElementById('previewImage').src = evt.target.result;
@@ -606,13 +606,12 @@
           parseGS1(text);
         })
         .catch(err => {
-          alert('بارکدی در تصویر یافت نشد یا کیفیت تصویر کم است. لطفاً اطلاعات را دستی وارد کنید.');
+          alert('بارکدی در تصویر یافت نشد. لطفاً اطلاعات را دستی وارد کنید (بارکد به دیتابیس هوشمند اضافه خواهد شد).');
         });
     }
 
     function openCameraModal() {
       clearModalForm();
-      // نمایش کادر دوربین و مخفی کردن پیش‌نمایش گالری
       document.getElementById('cam-box').classList.remove('hidden');
       document.getElementById('item-modal').classList.remove('hidden');
       startCameraScanner();
@@ -631,7 +630,7 @@
         },
         (errorMessage) => {}
       ).catch(err => {
-        console.log("خطا در دسترسی به دوربین:", err);
+        console.log("خطا در دوربین:", err);
       });
     }
 
@@ -657,9 +656,13 @@
 
       if (!name || !gtin) { alert('لطفا نام و بارکد کالا را وارد کنید.'); return; }
 
+      // یادگیری هوشمند: ذخیره خودکار در دیتابیس هوشمند برای دفعات بعدی
+      if (!pharmacyData.smartDB) pharmacyData.smartDB = {};
+      pharmacyData.smartDB[gtin] = { name, mfg, exp, batch, loc };
+
       let items = pharmacyData.items;
       let existing = items.find(i => i.gtin === gtin);
-      if (type === 'in' || type === 'return') {
+      if (type === 'in') {
         if (existing) existing.qty += qty;
         else items.push({ gtin, name, qty, batch, mfg, exp, loc, storage, buy, sell, min });
       } else {
@@ -668,7 +671,7 @@
       }
 
       const now = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date());
-      let typeLabel = type === 'in' ? 'ورود کالا' : (type === 'out' ? 'خروج / فروش' : (type === 'return' ? 'مرجوعی' : 'امحاء / ضایعات'));
+      let typeLabel = type === 'in' ? 'ورود کالا' : 'خروج / فروش';
       
       pharmacyData.txs.unshift({ type: typeLabel, name, gtin, qty, user: `${currentUser.name} (${currentUser.userid})`, time: now });
 
@@ -677,6 +680,7 @@
       renderItems();
       renderTxs();
       updateStats();
+      alert('✅ کالا ثبت شد و اطلاعات بارکد در دیتابیس هوشمند ذخیره گردید.');
     }
 
     function renderItems() {
@@ -777,7 +781,7 @@
       const pass = document.getElementById('staff-pass').value;
 
       if (!name || !userid || !pass) { alert('لطفا تمام فیلدها را پر کنید.'); return; }
-      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی پرسنلی قبلاً ثبت شده است!'); return; }
+      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی قبلاً ثبت شده است!'); return; }
 
       pharmacyData.staff.push({ name, userid, pass, role: 'انباردار / پرسنل', phone: 'ثبت نشده' });
       saveDB();
