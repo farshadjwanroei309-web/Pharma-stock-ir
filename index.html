@@ -9,7 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://v1.fontapi.ir/css/Vazirmatn');
-    * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; }
+    h1, h2, h3, h4, label, p, span, a, button { text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
     body { background-color: #080c14; color: #f1f5f9; min-height: 100vh; }
     .glass-card { background: linear-gradient(135deg, #131b2e 0%, #0f172a 100%); border: 1px solid #1e293b; border-radius: 1.25rem; box-shadow: 0 12px 35px -10px rgba(0,0,0,0.6); }
     .input-dark { background: #060911; border: 1px solid #1e293b; color: #ffffff; border-radius: 0.85rem; padding: 0.7rem 1rem; width: 100%; outline: none; font-size: 0.85rem; transition: all 0.3s; }
@@ -36,18 +37,18 @@
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs text-slate-300 mb-1.5">شماره موبایل یا آیدی کاربری:</label>
-          <input type="text" id="login-id" placeholder="مثال: 09123456789 یا admin" required class="input-dark text-left font-mono" dir="ltr" value="09123456789">
+          <input type="text" id="login-id" placeholder="مثال: 09123456789 یا admin" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1.5">رمز عبور:</label>
           <div class="relative">
-            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr" value="Admin@123">
+            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
             <button type="button" onclick="togglePasswordVisibility('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️</button>
           </div>
         </div>
         <div class="flex justify-between items-center text-xs">
           <button type="button" onclick="showForgotPassword()" class="text-cyan-400 hover:underline">فراموشی رمز عبور؟</button>
-          <button type="button" onclick="showRegisterScreen()" class="text-emerald-400 hover:underline font-bold">ثبت‌نام داروخانه / کالاپزشکی</button>
+          <button type="button" onclick="showRegisterScreen()" class="text-emerald-400 hover:underline font-bold">ثبت‌‌نام داروخانه / کالاپزشکی</button>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs">ورود به سیستم</button>
       </form>
@@ -362,7 +363,7 @@
         btn.innerText = "🔒";
       } else {
         field.type = "password";
-        btn.innerText = "👁️️";
+        btn.innerText = "👁️";
       }
     }
 
@@ -439,7 +440,6 @@
       const idInput = document.getElementById('login-id').value.trim();
       const pass = document.getElementById('login-pass').value.trim();
 
-      // چک کردن مدیران کل (با کلید اصلی یا ایدی متنی ذخیره شده)
       if (allPharmacies[idInput] && allPharmacies[idInput].password === pass) {
         currentShopKey = idInput;
         currentUser = { name: allPharmacies[idInput].adminName, id: idInput, role: "مدیر کل داروخانه" };
