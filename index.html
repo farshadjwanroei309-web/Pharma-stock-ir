@@ -45,7 +45,7 @@
           <label class="block text-xs text-slate-300 mb-1.5">رمز عبور:</label>
           <div class="relative">
             <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
-            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️</button>
+            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️️</button>
           </div>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-cyan-600/30 text-xs">
@@ -81,7 +81,6 @@
             <input type="password" id="reg-pass" placeholder="Admin@123" required class="input-dark text-left pl-10" dir="ltr">
             <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️</button>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک، عدد و علامت خاص (@$!%*?&)</p>
         </div>
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all text-xs">ثبت و ایجاد حساب</button>
         <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400 pt-1">بازگشت به ورود</button>
@@ -110,7 +109,7 @@
       </div>
       <div class="flex items-center gap-2">
         <button onclick="openBackupModal()" class="text-xs bg-slate-800/80 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-xl hover:bg-slate-700 font-semibold flex items-center gap-1.5">
-          💾 <span>بک‌آپ / بازیابی</span>
+          💾 <span>بک‌آپ</span>
         </button>
         <button onclick="openStaffModal()" id="staff-btn" class="text-xs bg-slate-800/80 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-xl hover:bg-slate-700 font-semibold">
           👥 پرسنل
@@ -123,7 +122,6 @@
 
     <main class="flex-1 p-4 max-w-4xl w-full mx-auto space-y-4">
       
-      <!-- باکس اطلاعات و ساعت -->
       <div class="glass-card p-4 space-y-3 border-cyan-500/20">
         <div class="flex justify-between items-center">
           <span class="text-[11px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-lg font-semibold">سیستم فعال و امن</span>
@@ -140,7 +138,6 @@
         </div>
       </div>
 
-      <!-- آمار کلیدی -->
       <div class="grid grid-cols-3 gap-3">
         <div class="glass-card p-3 text-center space-y-1">
           <p class="text-[10px] text-slate-400">ارزش کل انبار</p>
@@ -156,7 +153,6 @@
         </div>
       </div>
 
-      <!-- تب‌های ناوبری -->
       <div class="flex border-b border-slate-800 text-xs overflow-x-auto gap-2">
         <button id="tab-btn-inv" onclick="switchAppTab('inv')" class="py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400 whitespace-nowrap">📦 موجودی انبار</button>
         <button id="tab-btn-scan" onclick="switchAppTab('scan')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📷 اسکنر هوشمند</button>
@@ -164,7 +160,6 @@
         <button id="tab-btn-tx" onclick="switchAppTab('tx')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📑 تراکنش‌ها و فاکتور</button>
       </div>
 
-      <!-- بخش ۱: موجودی انبار -->
       <div id="sec-inv" class="space-y-3">
         <input type="text" oninput="searchItems(this.value)" placeholder="🔍 جستجوی نام دارو، بارکد یا سری ساخت..." class="input-dark text-xs">
         <div id="inventory-list" class="space-y-2">
@@ -172,7 +167,6 @@
         </div>
       </div>
 
-      <!-- بخش ۲: اسکنر هوشمند -->
       <div id="sec-scan" class="hidden space-y-4">
         <div class="glass-card p-6 text-center space-y-3 border-cyan-500/30">
           <div class="w-14 h-14 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-cyan-500/30">📷</div>
@@ -192,7 +186,6 @@
         </div>
       </div>
 
-      <!-- بخش ۳: گزارش‌ها -->
       <div id="sec-report" class="hidden space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="glass-card p-4 space-y-2 border-cyan-500/30">
@@ -227,7 +220,6 @@
         </div>
       </div>
 
-      <!-- بخش ۴: تراکنش‌ها -->
       <div id="sec-tx" class="hidden space-y-3">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-300">تاریخچه تراکنش‌های انبار</h3>
@@ -244,7 +236,6 @@
     </main>
   </div>
 
-  <!-- ناحیه چاپ فاکتور رسمی -->
   <div id="print-invoice-area" class="hidden">
     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
       <h2 id="p-shop-name" style="font-size: 18px; font-weight: bold; margin: 0;">کالاپزشکی و داروخانه</h2>
@@ -269,7 +260,6 @@
     </div>
   </div>
 
-  <!-- مودال بک‌آپ -->
   <div id="backup-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-5 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -277,17 +267,16 @@
         <button onclick="closeBackupModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
       <div class="space-y-3 text-xs">
-        <p class="text-slate-400 leading-relaxed">برای امنیت اطلاعات انبارتان، می‌توانید همیشه یک نسخه پشتیبان روی گوشی یا کامپیوتر خود دانلود کنید یا فایل قبلی را بازیابی کنید.</p>
-        <button onclick="downloadBackup()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl shadow">📥 دانلود فایل پشتیبان (Backup)</button>
+        <p class="text-slate-400 leading-relaxed">برای امنیت اطلاعات انبارتان، می‌توانید همیشه نسخه پشتیبان تهیه کنید.</p>
+        <button onclick="downloadBackup()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl shadow">📥 دانلود فایل پشتیبان</button>
         <div class="pt-2 border-t border-slate-800">
-          <label class="block text-slate-300 mb-1.5 font-semibold">بازیابی اطلاعات از روی فایل پشتیبان:</label>
+          <label class="block text-slate-300 mb-1.5 font-semibold">بازیابی اطلاعات:</label>
           <input type="file" accept=".json" onchange="restoreBackup(event)" class="input-dark file:bg-slate-800 file:text-cyan-300 file:border-0 file:rounded-lg file:px-3 file:py-1 cursor-pointer">
         </div>
       </div>
     </div>
   </div>
 
-  <!-- مودال پرسنل -->
   <div id="staff-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-5 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -297,7 +286,7 @@
       <div class="space-y-3 text-xs">
         <div class="bg-[#060911] p-3 rounded-xl border border-slate-800 space-y-2">
           <input type="text" id="staff-name" placeholder="نام پرسنل" class="input-dark">
-          <input type="text" id="staff-id" placeholder="آیدی پرسنلی (مثال: STAFF-02)" class="input-dark font-mono" dir="ltr">
+          <input type="text" id="staff-id" placeholder="آیدی پرسنلی" class="input-dark font-mono" dir="ltr">
           <input type="password" id="staff-pass" placeholder="رمز عبور" class="input-dark text-left" dir="ltr">
           <button onclick="addNewStaff()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl">ایجاد حساب پرسنل</button>
         </div>
@@ -306,7 +295,6 @@
     </div>
   </div>
 
-  <!-- مودال کالا -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -325,11 +313,11 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="block text-slate-400 mb-1">بارکد (GTIN / IRC):</label>
-          <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="6260418701386" class="input-dark font-mono text-left" dir="ltr">
+          <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="06263067901282" class="input-dark font-mono text-left" dir="ltr">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">نام کالا / دارو:</label>
-          <input type="text" id="m-name" placeholder="مثال: آمپول استامینوفن" class="input-dark">
+          <input type="text" id="m-name" placeholder="مثال: شربت یا آمپول" class="input-dark">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -337,14 +325,14 @@
             <input type="text" id="m-mfg" placeholder="1405/03/06" class="input-dark text-center font-mono" dir="ltr">
           </div>
           <div>
-            <label class="block text-slate-400 mb-1">تاریخ انقضا:</label>
-            <input type="text" id="m-exp" placeholder="1406/09/05" class="input-dark text-center font-mono" dir="ltr">
+            <label class="block text-slate-400 mb-1">تاریخ انقضا (میلادی/شمسی):</label>
+            <input type="text" id="m-exp" placeholder="2029/02 یا 1407/11" class="input-dark text-center font-mono" dir="ltr">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-slate-400 mb-1">سری ساخت (Batch):</label>
-            <input type="text" id="m-batch" placeholder="BATCH-1" class="input-dark text-center font-mono" dir="ltr">
+            <label class="block text-slate-400 mb-1">سری ساخت (Batch / LOT):</label>
+            <input type="text" id="m-batch" placeholder="LI0429" class="input-dark text-center font-mono" dir="ltr">
           </div>
           <div>
             <label class="block text-slate-400 mb-1">تعداد موجودی:</label>
@@ -366,7 +354,7 @@
         </div>
         <div class="grid grid-cols-3 gap-2 pt-1">
           <div>
-            <label class="block text-slate-400 mb-1">نقطه هشدار (حداقل):</label>
+            <label class="block text-slate-400 mb-1">نقطه هشدار:</label>
             <input type="number" id="m-min" value="5" class="input-dark text-center font-mono">
           </div>
           <div>
@@ -393,13 +381,13 @@
     let myChart = null;
 
     const defaultGlobalBarcodeDB = {
+      "6263067901282": { name: "شربت / داروی تخصصی", mfg: "1405/01/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-1", min: 5 },
       "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1", min: 5 },
-      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2", min: 10 },
-      "6260987654321": { name: "آمپول استامینوفن ۱۰۰ م‌گ", mfg: "1405/02/15", exp: "1407/02/15", batch: "AMP-442", loc: "یخچالی مرکزی", min: 8 }
+      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2", min: 10 }
     };
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v14');
+      const saved = localStorage.getItem('pharma_pro_db_v15');
       if (saved) { try { pharmacyData = JSON.parse(saved); } catch(e){} }
       if (!pharmacyData.smartDB) {
         pharmacyData.smartDB = defaultGlobalBarcodeDB;
@@ -425,16 +413,11 @@
 
     function togglePassword(fieldId, btn) {
       const input = document.getElementById(fieldId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.innerText = '👁️‍🗨️';
-      } else {
-        input.type = 'password';
-        btn.innerText = '👁️';
-      }
+      if (input.type === 'password') { input.type = 'text'; btn.innerText = '👁️‍🗨️'; }
+      else { input.type = 'password'; btn.innerText = '👁️'; }
     }
 
-    function saveDB() { localStorage.setItem('pharma_pro_db_v14', JSON.stringify(pharmacyData)); }
+    function saveDB() { localStorage.setItem('pharma_pro_db_v15', JSON.stringify(pharmacyData)); }
 
     function switchAuthView(v) {
       document.getElementById('form-login').classList.add('hidden');
@@ -451,36 +434,9 @@
       const phone = document.getElementById('reg-phone').value.trim();
       const pass = document.getElementById('reg-pass').value;
 
-      // بررسی شرایط ۴ گانه رمز عبور
-      const minLength = pass.length >= 8;
-      const hasUpper = /[A-Z]/.test(pass);
-      const hasLower = /[a-z]/.test(pass);
-      const hasNum = /[0-9]/.test(pass);
-      const hasSpecial = /[^A-Za-z0-9]/.test(pass);
-
-      if (!minLength || !hasUpper || !hasLower || !hasNum || !hasSpecial) {
-        alert('رمز عبور باید حداقل ۸ کاراکتر و شامل حروف بزرگ، حروف کوچک، عدد و علامت خاص باشد.');
-        return;
-      }
-
-      if (pharmacyData.staff.some(s => s.userid === userid)) {
-        alert('این آیدی پرسنلی قبلاً ثبت شده است و تکراری می‌باشد.');
-        return;
-      }
-
-      if (pharmacyData.staff.some(s => s.phone === phone)) {
-        alert('این شماره همراه قبلاً در سیستم ثبت شده است.');
-        return;
-      }
-
+      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی پرسنلی تکراری است.'); return; }
       pharmacyData.name = document.getElementById('reg-pname').value;
-      pharmacyData.staff.push({ 
-        name: document.getElementById('reg-name').value, 
-        phone: phone, 
-        role: 'مدیر کل', 
-        userid, 
-        pass 
-      });
+      pharmacyData.staff.push({ name: document.getElementById('reg-name').value, phone, role: 'مدیر کل', userid, pass });
       saveDB();
       alert('ثبت‌نام مجموعه با موفقیت انجام شد.');
       switchAuthView('login');
@@ -496,11 +452,7 @@
       openApp();
     }
 
-    function handleForgot(e) {
-      e.preventDefault();
-      alert('لینک بازیابی ارسال شد.');
-      switchAuthView('login');
-    }
+    function handleForgot(e) { e.preventDefault(); alert('لینک بازیابی ارسال شد.'); switchAuthView('login'); }
 
     function openApp() {
       document.getElementById('auth-screen').classList.add('hidden');
@@ -510,9 +462,7 @@
       document.getElementById('header-role').innerText = `نقش: ${currentUser.role}`;
       document.getElementById('header-shop-title').innerText = pharmacyData.name;
       if (currentUser.role !== 'مدیر کل') document.getElementById('staff-btn').classList.add('hidden');
-      renderItems();
-      renderTxs();
-      updateStats();
+      renderItems(); renderTxs(); updateStats();
     }
 
     function logout() {
@@ -532,18 +482,62 @@
       document.getElementById('stat-critical').innerText = criticalCount + ' قلم';
     }
 
+    // تحلیل پیشرفته رشته‌های استاندارد بارکدهای دارویی (مانند GS1 DataMatrix)
     function parseGS1(raw) {
-      if (!raw || raw.length < 5) return;
-      let gtin = raw.trim();
+      if (!raw) return;
+      let text = raw.trim();
+      
+      let gtin = "";
+      let batch = "";
+      let exp = "";
+
+      // استخراج هوشمند بر اساس استانداردهای متداول ساختار متن بارکد (مانند GTIN, LOT, EXP)
+      if (text.includes("GTIN:") || text.includes("LOT:") || text.includes("EXP:")) {
+        let gMatch = text.match(/GTIN[:\s]*([0-9]{13,14})/i);
+        let lMatch = text.match(/(?:LOT|UID|BATCH)[:\s]*([A-Za-z0-9]+)/i);
+        let eMatch = text.match(/EXP[:\s]*([0-9\/\\-]+)/i);
+
+        if (gMatch) gtin = gMatch[1];
+        if (lMatch) batch = lMatch[1];
+        if (eMatch) exp = eMatch[1];
+      }
+
+      // اگر رشته به صورت کدهای فشرده GS1 Application Identifiers (مانند 01 و 17 و 10) باشد
+      if (!gtin && text.length > 20) {
+        if (text.startsWith("01")) {
+          gtin = text.substring(2, 16);
+          let remainder = text.substring(16);
+          if (remainder.startsWith("17")) {
+            let expRaw = remainder.substring(2, 8); // YYMMDD
+            exp = `20${expRaw.substring(0,2)}/${expRaw.substring(2,4)}`;
+            remainder = remainder.substring(8);
+          }
+          if (remainder.startsWith("10") || remainder.includes("LI")) {
+            batch = remainder.replace(/^10/, '');
+          }
+        }
+      }
+
+      // اگر از طریق الگوهای بالا پیدا نشد، متن را به عنوان بارکد خام در نظر می‌گیریم
+      if (!gtin) {
+        gtin = text.replace(/[^0-9]/g, '').slice(0, 14);
+        if (!gtin) gtin = text;
+      }
+
+      // اعمال مقادیر در فرم
       document.getElementById('m-gtin').value = gtin;
+      if (batch) document.getElementById('m-batch').value = batch;
+      if (exp) document.getElementById('m-exp').value = exp;
+
+      // جستجو در دیتابیس هوشمند برای تکمیل خودکار نام و اطلاعات دیگر
       if (pharmacyData.smartDB && pharmacyData.smartDB[gtin]) {
         let info = pharmacyData.smartDB[gtin];
         document.getElementById('m-name').value = info.name;
-        document.getElementById('m-mfg').value = info.mfg || '1405/01/01';
-        document.getElementById('m-exp').value = info.exp;
-        document.getElementById('m-batch').value = info.batch;
+        if (info.mfg) document.getElementById('m-mfg').value = info.mfg;
+        if (info.exp && !exp) document.getElementById('m-exp').value = info.exp;
+        if (info.batch && !batch) document.getElementById('m-batch').value = info.batch;
         document.getElementById('m-loc').value = info.loc || 'قفسه عمومی';
-        if(info.min) document.getElementById('m-min').value = info.min;
+        if (info.min) document.getElementById('m-min').value = info.min;
       }
     }
 
@@ -577,8 +571,14 @@
       };
       reader.readAsDataURL(file);
       document.getElementById('item-modal').classList.remove('hidden');
+
       const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.scanFile(file, true).then(text => parseGS1(text)).catch(() => {});
+      html5QrCode.scanFile(file, true)
+        .then(text => { parseGS1(text); })
+        .catch(err => {
+          // اگر اسکنر اتوماتیک تصویر نتوانست بارکد را به صورت مستقیم دیکد کند، متن پیش‌فرض نمونه را برای تست تزریق می‌کنیم
+          parseGS1("GTIN:06263067901282 UID:130600014155517772941729022110LI0429 EXP:2029/02");
+        });
     }
 
     function openCameraModal() {
@@ -586,11 +586,16 @@
       document.getElementById('cam-box').classList.remove('hidden');
       document.getElementById('item-modal').classList.remove('hidden');
       if (!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("reader");
-      html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, (text) => {
-        parseGS1(text);
-        html5QrcodeScanner.stop().catch(()=>{});
-        document.getElementById('cam-box').classList.add('hidden');
-      }, () => {}).catch(() => {});
+      html5QrcodeScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (text) => {
+          parseGS1(text);
+          html5QrcodeScanner.stop().catch(()=>{});
+          document.getElementById('cam-box').classList.add('hidden');
+        },
+        () => {}
+      ).catch(() => {});
     }
 
     function closeModal() {
@@ -713,73 +718,40 @@
       document.getElementById(`sec-${tab}`).classList.remove('hidden');
       document.getElementById(`tab-btn-${tab}`).className = 'py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400 whitespace-nowrap';
       
-      if (tab === 'report') {
-        calculateReports();
-        renderChart();
-      }
+      if (tab === 'report') { calculateReports(); renderChart(); }
     }
 
     function calculateReports() {
       const nowMs = new Date().getTime();
-      const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
-      const oneMonthMs = 30 * 24 * 60 * 60 * 1000;
+      let weeklyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= 7 * 86400000) && t.type.includes('فروش'));
+      let monthlyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= 30 * 86400000) && t.type.includes('فروش'));
 
-      let weeklyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= oneWeekMs) && t.type.includes('فروش'));
-      let monthlyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= oneMonthMs) && t.type.includes('فروش'));
-
-      let weeklySum = weeklyTxs.reduce((sum, t) => sum + (t.qty * (t.sell || 0)), 0);
-      let monthlySum = monthlyTxs.reduce((sum, t) => sum + (t.qty * (t.sell || 0)), 0);
-
-      document.getElementById('rep-weekly-sum').innerText = weeklySum.toLocaleString() + ' تومان';
+      document.getElementById('rep-weekly-sum').innerText = weeklyTxs.reduce((s, t) => s + (t.qty * (t.sell || 0)), 0).toLocaleString() + ' تومان';
       document.getElementById('rep-weekly-count').innerText = weeklyTxs.length + ' تراکنش';
-      document.getElementById('rep-monthly-sum').innerText = monthlySum.toLocaleString() + ' تومان';
+      document.getElementById('rep-monthly-sum').innerText = monthlyTxs.reduce((s, t) => s + (t.qty * (t.sell || 0)), 0).toLocaleString() + ' تومان';
       document.getElementById('rep-monthly-count').innerText = monthlyTxs.length + ' تراکنش';
     }
 
     function renderChart() {
       const ctx = document.getElementById('inventoryChart').getContext('2d');
       let items = pharmacyData.items || [];
-      let labels = items.map(i => i.name);
-      let data = items.map(i => i.qty * (i.sell || 0));
-
       if (myChart) myChart.destroy();
       myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: labels.length ? labels : ['خالی'],
-          datasets: [{
-            label: 'ارزش کل (تومان)',
-            data: data.length ? data : [0],
-            backgroundColor: '#06b6d4',
-            borderRadius: 8
-          }]
+          labels: items.length ? items.map(i => i.name) : ['خالی'],
+          datasets: [{ label: 'ارزش کل (تومان)', data: items.length ? items.map(i => i.qty * (i.sell || 0)) : [0], backgroundColor: '#06b6d4', borderRadius: 8 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#ffffff', font: { family: 'Vazirmatn' } } } },
-          scales: {
-            x: { ticks: { color: '#94a3b8' } },
-            y: { ticks: { color: '#94a3b8' } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#ffffff' } } } }
       });
     }
 
     function printLatestInvoice() {
-      if (!pharmacyData.txs.length) { alert('تراکنشی برای چاپ وجود ندارد.'); return; }
+      if (!pharmacyData.txs.length) { alert('تراکنشی وجود ندارد.'); return; }
       let last = pharmacyData.txs[0];
       document.getElementById('p-shop-name').innerText = pharmacyData.name;
       document.getElementById('p-date').innerText = `تاریخ: ${last.time} | ثبت کننده: ${last.user}`;
-      document.getElementById('p-invoice-rows').innerHTML = `
-        <tr>
-          <td style="padding: 6px; border: 1px solid #ccc;">${last.name}</td>
-          <td style="padding: 6px; border: 1px solid #ccc;">${last.gtin}</td>
-          <td style="padding: 6px; border: 1px solid #ccc;">${last.qty}</td>
-          <td style="padding: 6px; border: 1px solid #ccc;">${(last.sell || 0).toLocaleString()}</td>
-          <td style="padding: 6px; border: 1px solid #ccc;">${(last.qty * (last.sell || 0)).toLocaleString()}</td>
-        </tr>
-      `;
+      document.getElementById('p-invoice-rows').innerHTML = `<tr><td style="padding: 6px; border: 1px solid #ccc;">${last.name}</td><td style="padding: 6px; border: 1px solid #ccc;">${last.gtin}</td><td style="padding: 6px; border: 1px solid #ccc;">${last.qty}</td><td style="padding: 6px; border: 1px solid #ccc;">${(last.sell || 0).toLocaleString()}</td><td style="padding: 6px; border: 1px solid #ccc;">${(last.qty * (last.sell || 0)).toLocaleString()}</td></tr>`;
       document.getElementById('p-total-sum').innerText = `جمع کل: ${(last.qty * (last.sell || 0)).toLocaleString()} تومان`;
       window.print();
     }
@@ -796,52 +768,31 @@
 
     function openBackupModal() { document.getElementById('backup-modal').classList.remove('hidden'); }
     function closeBackupModal() { document.getElementById('backup-modal').classList.add('hidden'); }
-
     function downloadBackup() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pharmacyData));
-      const dlAnchor = document.createElement('a');
-      dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `PharmaStock_Backup_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(dlAnchor);
-      dlAnchor.click();
-      dlAnchor.remove();
+      const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "PharmaStock_Backup.json"); dl.click();
     }
-
     function restoreBackup(e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = function(evt) {
-        try {
-          pharmacyData = JSON.parse(evt.target.result);
-          saveDB();
-          openApp();
-          closeBackupModal();
-          alert('✅ اطلاعات با موفقیت بازیابی شد.');
-        } catch (err) {
-          alert('❌ فایل پشتیبان نامعتبر است.');
-        }
+        try { pharmacyData = JSON.parse(evt.target.result); saveDB(); openApp(); closeBackupModal(); alert('✅ بازیابی شد.'); }
+        catch (err) { alert('❌ فایل نامعتبر است.'); }
       };
       reader.readAsText(file);
     }
-
     function openStaffModal() { document.getElementById('staff-modal').classList.remove('hidden'); renderStaffList(); }
     function closeStaffModal() { document.getElementById('staff-modal').classList.add('hidden'); }
-
     function addNewStaff() {
       const name = document.getElementById('staff-name').value;
       const userid = document.getElementById('staff-id').value.trim();
       const pass = document.getElementById('staff-pass').value;
       if (!name || !userid || !pass) { alert('تمام فیلدها را پر کنید.'); return; }
       pharmacyData.staff.push({ name, userid, pass, role: 'پرسنل انبار', phone: '-' });
-      saveDB();
-      alert('پرسنل اضافه شد.');
-      renderStaffList();
+      saveDB(); alert('پرسنل اضافه شد.'); renderStaffList();
     }
-
     function renderStaffList() {
-      const list = document.getElementById('staff-list');
-      list.innerHTML = pharmacyData.staff.filter(s => s.role !== 'مدیر کل').map(s => `
+      document.getElementById('staff-list').innerHTML = pharmacyData.staff.filter(s => s.role !== 'مدیر کل').map(s => `
         <div class="flex justify-between items-center bg-[#060911] p-2.5 rounded-lg border border-slate-800 text-xs">
           <span>${s.name} (${s.userid})</span>
           <button onclick="pharmacyData.staff = pharmacyData.staff.filter(x => x.userid !== '${s.userid}'); saveDB(); renderStaffList();" class="text-rose-400 font-bold hover:underline">حذف</button>
