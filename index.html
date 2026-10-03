@@ -22,7 +22,7 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-  <!-- 1. صفحه ورود (همراه با دکمه چشم و فراموشی رمز) -->
+  <!-- 1. صفحه ورود -->
   <div id="auth-screen" class="flex-1 flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-md p-6 sm:p-8 space-y-6">
       <div class="text-center space-y-2">
@@ -34,30 +34,30 @@
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs text-slate-300 mb-1.5">آیدی پرسنلی یا مدیر:</label>
-          <input type="text" id="login-id" placeholder="مثال: ADMIN-100" required class="input-dark text-left font-mono" dir="ltr">
+          <input type="text" id="login-id" placeholder="مثال: ADMIN-888" required class="input-dark text-left font-mono" dir="ltr" value="ADMIN-888">
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1.5">رمز عبور:</label>
           <div class="relative">
-            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
+            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr" value="123">
             <button type="button" onclick="togglePasswordVisibility('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️</button>
           </div>
         </div>
         <div class="flex justify-between items-center text-xs">
           <button type="button" onclick="showForgotPassword()" class="text-cyan-400 hover:underline">فراموشی رمز عبور؟</button>
-          <button type="button" onclick="showRegisterScreen()" class="text-emerald-400 hover:underline font-bold">ثبت‌نام داروخانه / کالاپزشکی جدید</button>
+          <button type="button" onclick="showRegisterScreen()" class="text-emerald-400 hover:underline font-bold">ثبت‌نام داروخانه / کالاپزشکی</button>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs">ورود به سیستم</button>
       </form>
     </div>
   </div>
 
-  <!-- 2. صفحه ثبت‌نام داروخانه / کالاپزشکی جدید (برای فروش عمومی) -->
+  <!-- 2. صفحه ثبت‌نام داروخانه / کالاپزشکی جدید -->
   <div id="register-screen" class="flex-1 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-6 sm:p-8 space-y-6">
       <div class="text-center space-y-2">
         <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-3xl flex items-center justify-center mx-auto text-2xl border border-emerald-500/20 shadow-lg">🏥</div>
-        <h2 class="text-lg font-bold text-white tracking-wide">ثبت‌نام داروخانه یا کالاپزشکی</h2>
+        <h2 class="text-lg font-bold text-white tracking-wide">ثبت‌‌نام داروخانه یا کالاپزشکی</h2>
         <p class="text-xs text-slate-400">ساخت انبار اختصاصی و پنل مدیریت کل</p>
       </div>
 
@@ -173,7 +173,7 @@
     </main>
   </div>
 
-  <!-- مودال مدیریت پرسنل (توسط مدیر داروخانه) -->
+  <!-- مودال مدیریت پرسنل -->
   <div id="staff-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-4 space-y-3 max-h-[92vh] overflow-y-auto text-xs">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -193,7 +193,10 @@
         </div>
         <div>
           <label class="block text-slate-400 mb-1">رمز عبور پرسنل:</label>
-          <input type="text" id="staff-pass" placeholder="رمز عبور" required class="input-dark text-left font-mono" dir="ltr">
+          <div class="relative">
+            <input type="password" id="staff-pass" placeholder="رمز عبور" required class="input-dark text-left pl-10 font-mono" dir="ltr">
+            <button type="button" onclick="togglePasswordVisibility('staff-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">👁️</button>
+          </div>
         </div>
         <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl font-bold">ثبت و ساخت پرسنل</button>
       </form>
@@ -275,8 +278,7 @@
   </div>
 
   <script>
-    // سیستم ذخیره‌سازی داده‌های چند داروخانه مجزا
-    let allPharmacies = JSON.parse(localStorage.getItem('pharma_multi_db_v2')) || {
+    let allPharmacies = JSON.parse(localStorage.getItem('pharma_multi_db_v3')) || {
       "ADMIN-888": {
         shopName: "داروخانه مرکزی (پیش‌فرض)",
         adminName: "مدیر کل سیستم",
@@ -293,10 +295,9 @@
     let myChart = null;
 
     function saveAll() {
-      localStorage.setItem('pharma_multi_db_v2', JSON.stringify(allPharmacies));
+      localStorage.setItem('pharma_multi_db_v3', JSON.stringify(allPharmacies));
     }
 
-    // کنترل صفحات
     function showLoginScreen() {
       document.getElementById('register-screen').classList.add('hidden');
       document.getElementById('auth-screen').classList.remove('hidden');
@@ -321,7 +322,6 @@
       }
     }
 
-    // دکمه نمایش/مخفی کردن رمز (چشم)
     function togglePasswordVisibility(fieldId, btn) {
       const field = document.getElementById(fieldId);
       if (field.type === "password") {
@@ -333,7 +333,6 @@
       }
     }
 
-    // ثبت‌نام داروخانه جدید
     function handleRegisterPharmacy(e) {
       e.preventDefault();
       const shopName = document.getElementById('reg-shop-name').value.trim();
@@ -359,13 +358,11 @@
       showLoginScreen();
     }
 
-    // ورود به سیستم
     function handleLogin(e) {
       e.preventDefault();
       const id = document.getElementById('login-id').value.trim();
       const pass = document.getElementById('login-pass').value.trim();
 
-      // بررسی مدیران
       if (allPharmacies[id] && allPharmacies[id].password === pass) {
         currentShopKey = id;
         currentUser = { name: allPharmacies[id].adminName, id: id, role: "مدیر کل داروخانه" };
@@ -373,7 +370,6 @@
         return;
       }
 
-      // بررسی پرسنل
       for (let key in allPharmacies) {
         let staffMember = allPharmacies[key].staff.find(s => s.id === id && s.pass === pass);
         if (staffMember) {
@@ -389,6 +385,7 @@
 
     function startAppSession() {
       document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('register-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
       
       let shop = allPharmacies[currentShopKey];
@@ -413,7 +410,6 @@
       currentUser = null;
     }
 
-    // مدیریت پرسنل توسط مدیر
     function openStaffModal() {
       document.getElementById('staff-modal').classList.remove('hidden');
       renderStaffList();
@@ -464,7 +460,6 @@
       renderStaffList();
     }
 
-    // بروزرسانی داده‌های انبار داروخانه جاری
     function refreshAllDataViews() {
       renderItems(); renderInbound(); renderOutbound(); renderReturns(); updateStats(); checkExpiryAlerts();
     }
