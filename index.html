@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ثبت کالا و انبار</title>
-    <!-- کتابخانه اسکنر بارکد QuaggaJS -->
+    <!-- کتابخانه اسکنر بارکد -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
         body {
@@ -27,7 +27,7 @@
             gap: 10px;
             flex-wrap: wrap;
         }
-        button, label.gallery-btn {
+        button, .gallery-btn {
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
@@ -36,7 +36,7 @@
             font-size: 14px;
         }
         .btn-primary { background-color: #00bcd4; color: white; }
-        .gallery-btn { background-color: #ff9800; color: white; display: inline-block; }
+        .gallery-btn { background-color: #ff9800; color: white; display: inline-block; text-align: center; }
         .btn-danger { background-color: #f44336; color: white; }
         
         #interactive.viewport {
@@ -71,10 +71,10 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-        /* کادر قرمز رنگ هشدار انقضا */
+        /* کادر کاملاً قرمز رنگ هشدار انقضا */
         #expiry-warning-box {
             border: 2px solid red !important;
-            background-color: rgba(255, 0, 0, 0.1);
+            background-color: rgba(255, 0, 0, 0.12);
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
@@ -97,11 +97,11 @@
 <div class="container">
     <h2>ثبت کالا و اسکنر هوشمند بارکد</h2>
 
-    <!-- بخش کنترل‌های اسکنر (دوربین و گالری) -->
+    <!-- بخش کنترل‌های اسکنر (دوربین و دکمه جدید گالری) -->
     <div class="scanner-controls">
         <button id="start-camera" class="btn-primary" type="button">روشن کردن دوربین</button>
         
-        <!-- دکمه انتخاب از گالری -->
+        <!-- دکمه انتخاب از گالری برای اسکن بارکد عکس -->
         <label for="gallery-barcode-input" class="gallery-btn">
             📁 انتخاب از گالری
         </label>
@@ -148,7 +148,7 @@
 </div>
 
 <script>
-    // راه‌اندازی اسکنر دوربین با Quagga
+    // راه‌اندازی دوربین
     document.getElementById('start-camera').addEventListener('click', function() {
         Quagga.init({
             inputStream : {
@@ -170,17 +170,17 @@
     });
 
     document.getElementById('stop-camera').addEventListener('click', function() {
-        Quagga.stop();
+        try { Quagga.stop(); } catch(e) {}
     });
 
     Quagga.onDetected(function(result) {
         var code = result.codeResult.code;
         document.getElementById('barcode-input-field').value = code;
         alert('بارکد با موفقیت اسکن شد: ' + code);
-        Quagga.stop();
+        try { Quagga.stop(); } catch(e) {}
     });
 
-    // خواندن بارکد از تصویر گالری
+    // خواندن بارکد از تصویر انتخاب‌شده از گالری
     document.getElementById('gallery-barcode-input').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -198,14 +198,14 @@
                     document.getElementById('barcode-input-field').value = result.codeResult.code;
                     alert('بارکد از تصویر گالری خوانده شد: ' + result.codeResult.code);
                 } else {
-                    alert('بارکدی در تصویر یافت نشد. تصویر واضح‌تری انتخاب کنید.');
+                    alert('بارکدی در تصویر یافت نشد. لطفاً عکس واضح‌تری انتخاب کنید.');
                 }
             });
         };
         reader.readAsDataURL(file);
     });
 
-    // مدیریت ذخیره کالاها و بررسی هشدار انقضا
+    // ثبت کالا و ذخیره در حافظه محلی
     document.getElementById('product-form').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -230,7 +230,7 @@
         checkAndShowExpiringItems();
     });
 
-    // بررسی و نمایش کالاهای کمتر از ۳۰ روز مانده به انقضا
+    // نمایش خودکار اقلام دارای انقضا زیر ۳۰ روز در کادر قرمز رنگ
     function checkAndShowExpiringItems() {
         let products = JSON.parse(localStorage.getItem('warehouse_products') || '[]');
         const listElement = document.getElementById('expiring-items-list');
@@ -244,8 +244,7 @@
 
         products.forEach(product => {
             const expDate = new Date(product.expiryDate);
-            // مقایسه ساده تاریخ
-            if (expDate <= thirtyDaysLater) {
+            if (!isNaN(expDate) && expDate <= thirtyDaysLater) {
                 count++;
                 const li = document.createElement('li');
                 li.textContent = `محصول: ${product.name} | انقضا: ${product.expiryDate} (تعداد: ${product.quantity})`;
@@ -254,11 +253,10 @@
         });
 
         if (count === 0) {
-            listElement.innerHTML = '<li>هیچ کالایی در آستانه انقضا نیست.</li>';
+            listElement.innerHTML = '<li>هیچ کالایی در آستانه انقضا (کمتر از ۳۰ روز) نیست.</li>';
         }
     }
 
-    // اجرای بررسی انقضا به محض بارگذاری صفحه
     window.addEventListener('DOMContentLoaded', () => {
         checkAndShowExpiringItems();
     });
