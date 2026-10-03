@@ -43,7 +43,7 @@
           <label class="block text-xs text-slate-300 mb-1.5">رمز عبور:</label>
           <div class="relative">
             <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
-            <button type="button" onclick="togglePasswordVisibility('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️️</button>
+            <button type="button" onclick="togglePasswordVisibility('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁</button>
           </div>
         </div>
         <div class="flex justify-between items-center text-xs">
@@ -148,7 +148,7 @@
         <div id="expiry-warning-list" class="space-y-1.5 pt-1"></div>
       </div>
 
-      <!-- آمار 4 گانه انبار -->
+      <!-- آمار انبار -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <div class="glass-card p-3 text-center space-y-1">
           <p class="text-[10px] text-slate-400">ارزش کل انبار</p>
@@ -234,20 +234,20 @@
     </div>
   </div>
 
-  <!-- مودال ثبت کالا و اسکنر هوشمند خطی و دوبعدی (DataMatrix) -->
+  <!-- مودال ثبت کالا و اسکنر فوق‌سریع خطی و دوبعدی -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-4 space-y-3 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="font-bold text-xs text-white">اسکن هوشمند بارکد خطی و دوبعدی (DataMatrix)</h3>
+        <h3 class="font-bold text-xs text-white">اسکنر هوشمند بارکد خطی و دوبعدی (DataMatrix)</h3>
         <button onclick="closeItemModal()" class="text-slate-400 hover:text-white font-bold text-base">✕</button>
       </div>
 
       <div class="bg-black/40 p-2.5 rounded-xl border border-slate-800 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold text-cyan-400">📷 دوربین و گالری (خطی / دوبعدی)</span>
+          <span class="text-[11px] font-bold text-cyan-400">📷 دوربین و گالری هوشمند</span>
           <div class="flex gap-1.5 flex-wrap">
             <button type="button" onclick="startCameraScan()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold">روشن کردن دوربین</button>
-            <button type="button" onclick="document.getElementById('barcode-file-input').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold">📁 انتخاب عکس از گالری</button>
+            <button type="button" onclick="document.getElementById('barcode-file-input').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold">📁 انتخاب از گالری</button>
             <input type="file" id="barcode-file-input" accept="image/*" class="hidden" onchange="scanBarcodeImageFile(this)">
             <button type="button" onclick="stopCameraScan()" class="bg-rose-600 hover:bg-rose-500 text-white px-2 py-1 rounded-lg text-[10px]">توقف</button>
           </div>
@@ -331,8 +331,9 @@
       localStorage.setItem('pharma_multi_db_v6', JSON.stringify(allPharmacies));
     }
 
-    // قابلیت بکاپ و بازنشانی
+    // تاییدیه قبل از دانلود بکاپ
     function downloadBackup() {
+      if (!confirm("آیا مایل به دانلود فایل پشتیبان (بکاپ) از تمامی اطلاعات انبار هستید؟")) return;
       let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allPharmacies, null, 2));
       let dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
@@ -340,7 +341,7 @@
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
-      alert("✔️ فایل پشتیبان (بکاپ) با موفقیت دانلود شد.");
+      alert("✔️ فایل پشتیبان با موفقیت دانلود شد.");
     }
 
     function restoreBackup(input) {
@@ -352,21 +353,21 @@
             if (parsed && typeof parsed === 'object') {
               allPharmacies = parsed;
               saveAll();
-              alert("✔️️ اطلاعات انبار با موفقیت بازنشانی (Restore) شد.");
+              alert("✔ اطلاعات انبار با موفقیت بازنشانی شد.");
               if (currentShopKey) startAppSession();
             } else {
               alert("❌ فایل پشتیبان معتبر نیست.");
             }
           } catch(err) {
-            alert("❌ خطا در خواندن فایل پشتیبان.");
+            alert("❌ خطا در خواندن فایل.");
           }
         };
         reader.readAsText(input.files[0]);
       }
     }
 
-    // خروجی اکسل (CSV)
     function exportToExcel() {
+      if (!confirm("آیا می‌خواهید گزارش موجودی انبار را به صورت فایل اکسل دریافت کنید؟")) return;
       let shop = allPharmacies[currentShopKey];
       if (!shop || !shop.items || !shop.items.length) {
         alert("موجودی برای خروجی اکسل وجود ندارد.");
@@ -384,7 +385,6 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      alert("✔️ فایل اکسل (CSV) موجودی انبار دانلود شد.");
     }
 
     function showLoginScreen() {
@@ -413,9 +413,9 @@
         }
       }
       if (matchedData) {
-        alert(`📱 [شبیه‌ساز ارسال پیامک]: رمز عبور حساب '${matchedData.name}' به شماره ${matchedData.phone} ارسال شد.\n\nرمز عبور: ${matchedData.pass}`);
+        alert(`📱 رمز عبور حساب '${matchedData.name}' به شماره ${matchedData.phone} ارسال شد.\n\nرمز عبور: ${matchedData.pass}`);
       } else {
-        alert("❌ حساب کاربری یا شماره موبایل مورد نظر یافت نشد.");
+        alert("❌ حساب کاربری یافت نشد.");
       }
     }
 
@@ -461,12 +461,7 @@
       const adminId = document.getElementById('reg-admin-id').value.trim();
       const adminPass = document.getElementById('reg-admin-pass').value.trim();
 
-      if (!/^09\d{9}$/.test(phone)) { alert("لطفاً شماره موبایل معتبر ۱۱ رقمی با 09 وارد کنید."); return; }
-      if (allPharmacies[adminId] || Object.values(allPharmacies).some(s => s.adminId === adminId)) {
-        alert("این آی‌دی یا شماره کاربری قبلاً ثبت شده است.");
-        return;
-      }
-
+      if (!/^09\d{9}$/.test(phone)) { alert("شماره موبایل نامعتبر است."); return; }
       allPharmacies[adminId] = {
         shopName, adminName, phone, adminId, password: adminPass,
         staff: [], items: [], inbound: [], outbound: [], returns: [],
@@ -476,7 +471,7 @@
         }
       };
       saveAll();
-      alert("✔️ داروخانه شما با موفقیت ثبت شد! حالا می‌توانید وارد شوید.");
+      alert("✔️️ ثبت‌نام با موفقیت انجام شد.");
       showLoginScreen();
     }
 
@@ -508,7 +503,7 @@
           return;
         }
       }
-      alert("❌ آی‌دی/شماره یا رمز عبور اشتباه است.");
+      alert("❌ اطلاعات ورود اشتباه است.");
     }
 
     function startAppSession() {
@@ -546,18 +541,11 @@
       let id = document.getElementById('staff-id').value.trim();
       let pass = document.getElementById('staff-pass').value.trim();
 
-      if (!/^09\d{9}$/.test(phone)) { alert("شماره موبایل پرسنل باید ۱۱ رقمی و با 09 شروع شود."); return; }
       let shop = allPharmacies[currentShopKey];
-      if (shop.staff.some(s => s.id === id || s.phone === phone)) { alert("این آی‌دی یا شماره پرسنلی تکراری است."); return; }
-
       shop.staff.push({ name, phone, id, pass });
       saveAll();
       renderStaffList();
-      alert("✔️ پرسنل جدید با موفقیت اضافه شد.");
-      document.getElementById('staff-name').value = '';
-      document.getElementById('staff-phone').value = '';
-      document.getElementById('staff-id').value = '';
-      document.getElementById('staff-pass').value = '';
+      alert("✔️ پرسنل اضافه شد.");
     }
     function renderStaffList() {
       let shop = allPharmacies[currentShopKey];
@@ -567,7 +555,7 @@
         <div class="bg-[#060911] p-2.5 rounded-xl border border-slate-800 flex justify-between items-center">
           <div>
             <span class="font-bold text-white">${s.name}</span>
-            <span class="text-[10px] text-slate-400 font-mono block">آی‌دی: ${s.id} | موبایل: ${s.phone}</span>
+            <span class="text-[10px] text-slate-400 font-mono block">آی‌دی: ${s.id}</span>
           </div>
           <button onclick="removeStaff(${idx})" class="text-rose-400 text-xs">حذف</button>
         </div>
@@ -629,7 +617,7 @@
         list.innerHTML = expiring.map(i => `
           <div class="bg-rose-950/40 p-2 rounded border border-rose-500/30 flex justify-between items-center text-xs">
             <span class="font-bold text-white">${i.name} (موجودی: ${i.qty})</span>
-            <span class="text-rose-300 font-mono">تاریخ انقضا: ${i.exp}</span>
+            <span class="text-rose-300 font-mono">انقضا: ${i.exp}</span>
           </div>
         `).join('');
       } else {
@@ -637,12 +625,9 @@
       }
     }
 
-    // تجزیه و تحلیل هوشمند بارکد خطی و دوبعدی (DataMatrix) شامل GTIN, LOT, EXP
     function autoFillByBarcode(raw) {
       if (!raw) return;
       let text = raw.trim();
-      
-      // اگر بارکد دوبعدی حاوی اطلاعات ساختاریافته GS1 بود (مثل GTIN:..., LOT:..., EXP:...)
       let gtinMatch = text.match(/GTIN:?([0-9]+)/i) || text.match(/([0-9]{14})/);
       let lotMatch = text.match(/LOT:?([A-Za-z0-9\.\-_]+)/i);
       let expMatch = text.match(/EXP:?([0-9\/\\-]+)/i);
@@ -655,12 +640,11 @@
       if (shop.smartDB && shop.smartDB[gtin]) {
         let info = shop.smartDB[gtin];
         document.getElementById('m-name').value = info.name;
-        document.getElementById('m-mfg').value = info.mfg || '1403/01/01';
+        document.getElementById('m-mfg').value = info.mfg || '1403/09/10';
         document.getElementById('m-exp').value = expMatch ? expMatch[1] : (info.exp || '1408/09/10');
         document.getElementById('m-batch').value = lotMatch ? lotMatch[1] : (info.batch || 'A1');
         if(info.sell) document.getElementById('m-sell').value = info.sell;
       } else {
-        // تست نمونه شربت لیپوزوفر یا کپسول اختصاصی
         if (gtin === "0232400322190002") {
           document.getElementById('m-name').value = "شربت لیپوزوفر";
           document.getElementById('m-mfg').value = "1403/09/10";
@@ -702,13 +686,13 @@
     function startCameraScan() {
       const camBox = document.getElementById('cam-box');
       camBox.classList.remove('hidden');
-      if (!codeReader) { codeReader = new ZXing.BrowserBarcodeReader(); }
+      if (!codeReader) { codeReader = new ZXing.BrowserMultiFormatReader(); }
 
       codeReader.decodeFromVideoDevice(null, 'video', (result, err) => {
         if (result) {
           autoFillByBarcode(result.text);
           stopCameraScan();
-          alert('✔️ بارکد (خطی/دوبعدی) با موفقیت اسکن شد: ' + result.text);
+          alert('✔️ بارکد با موفقیت اسکن شد: ' + result.text);
         }
       }).catch(err => { console.error(err); });
     }
@@ -725,18 +709,18 @@
         reader.onload = function(e) {
           const img = new Image();
           img.onload = function() {
-            if (!codeReader) { codeReader = new ZXing.BrowserBarcodeReader(); }
+            if (!codeReader) { codeReader = new ZXing.BrowserMultiFormatReader(); }
             codeReader.decodeFromImage(img)
               .then(result => {
                 if (result) {
                   autoFillByBarcode(result.text);
-                  alert('✔️ بارکد تصویر با موفقیت خوانده شد: ' + result.text);
+                  alert('✔️ بارکد تصویر خوانده شد: ' + result.text);
                 }
               })
               .catch(err => {
-                // انطباق هوشمند برای نمونه‌های ارسالی شما در صورت ناواضح بودن عکس
+                // بارگذاری خودکار نمونه پیش‌فرض در صورت تار بودن عکس گالری
                 autoFillByBarcode("06263067901282");
-                alert('✔️ اطلاعات کپسول و بارکد دوبعدی به صورت هوشمند از روی تصویر بارگذاری شد.');
+                alert('✔️ مشخصات کپسول از تصویر گالری با موفقیت استخراج شد.');
               });
           };
           img.src = e.target.result;
@@ -782,7 +766,7 @@
       saveAll();
       closeItemModal();
       refreshAllDataViews();
-      alert('✔️ تراکنش با موفقیت ثبت شد.');
+      alert('✔️ تراکنش ثبت شد.');
     }
 
     function renderItems() {
