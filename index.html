@@ -18,6 +18,8 @@
     .bg-green-soft { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
     .bg-yellow-soft { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
     .bg-red-soft { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .req-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #94a3b8; transition: 0.3s; }
+    .req-item.valid { color: #34d399; }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -33,13 +35,13 @@
 
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs text-slate-300 mb-1.5">آیدی پرسنلی یا مدیر:</label>
-          <input type="text" id="login-id" placeholder="مثال: ADMIN-888" required class="input-dark text-left font-mono" dir="ltr" value="ADMIN-888">
+          <label class="block text-xs text-slate-300 mb-1.5">شماره موبایل یا آیدی کاربری:</label>
+          <input type="text" id="login-id" placeholder="مثال: 09123456789 یا admin" required class="input-dark text-left font-mono" dir="ltr" value="09123456789">
         </div>
         <div>
           <label class="block text-xs text-slate-300 mb-1.5">رمز عبور:</label>
           <div class="relative">
-            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr" value="123">
+            <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr" value="Admin@123">
             <button type="button" onclick="togglePasswordVisibility('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️</button>
           </div>
         </div>
@@ -71,18 +73,29 @@
           <input type="text" id="reg-admin-name" placeholder="مثال: سارا احمدی" required class="input-dark">
         </div>
         <div>
-          <label class="block text-slate-300 mb-1">آیدی اختصاصی مدیر (جهت ورود):</label>
-          <input type="text" id="reg-admin-id" placeholder="مثال: DR-KHANI-1" required class="input-dark text-left font-mono" dir="ltr">
+          <label class="block text-slate-300 mb-1">شماره موبایل مدیر (جهت ارسال پیامک بازیابی):</label>
+          <input type="text" id="reg-phone" placeholder="مثال: 09123456789" required class="input-dark text-left font-mono" dir="ltr" maxlength="11">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">آیدی متنی یا شماره جهت ورود:</label>
+          <input type="text" id="reg-admin-id" placeholder="مثال: 09123456789 یا farshad_admin" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
           <label class="block text-slate-300 mb-1">رمز عبور مدیر:</label>
           <div class="relative">
-            <input type="password" id="reg-admin-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
+            <input type="password" id="reg-admin-pass" oninput="checkPasswordStrength(this.value)" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
             <button type="button" onclick="togglePasswordVisibility('reg-admin-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️</button>
+          </div>
+          <!-- چک‌لیست ۴ تیکه شرایط رمز عبور -->
+          <div class="mt-2 space-y-1 bg-[#060911] p-2.5 rounded-xl border border-slate-800">
+            <div id="req-len" class="req-item"><span>❌</span> حداقل ۸ کاراکتر</div>
+            <div id="req-upper" class="req-item"><span>❌</span> حرف بزرگ انگلیسی (A-Z)</div>
+            <div id="req-lower" class="req-item"><span>❌</span> حرف کوچک انگلیسی (a-z)</div>
+            <div id="req-char" class="req-item"><span>❌</span> عدد یا کاراکتر خاص (!@#$...)</div>
           </div>
         </div>
         <div class="pt-2">
-          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg">تایید و ایجاد انبار اختصاصی</button>
+          <button type="submit" id="btn-submit-reg" class="w-full bg-emerald-600/50 cursor-not-allowed text-white font-bold py-3 rounded-xl shadow-lg" disabled>تایید و ایجاد انبار اختصاصی</button>
         </div>
         <div class="text-center pt-2">
           <button type="button" onclick="showLoginScreen()" class="text-slate-400 hover:text-white">بازگشت به صفحه ورود</button>
@@ -188,8 +201,12 @@
           <input type="text" id="staff-name" placeholder="مثال: علی رضایی" required class="input-dark">
         </div>
         <div>
-          <label class="block text-slate-400 mb-1">آیدی پرسنلی (جهت ورود):</label>
-          <input type="text" id="staff-id" placeholder="مثال: staff-1" required class="input-dark text-left font-mono" dir="ltr">
+          <label class="block text-slate-400 mb-1">شماره موبایل پرسنل (جهت بازیابی):</label>
+          <input type="text" id="staff-phone" placeholder="مثال: 09181111111" required class="input-dark text-left font-mono" dir="ltr" maxlength="11">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">آیدی یا نام کاربری پرسنل:</label>
+          <input type="text" id="staff-id" placeholder="مثال: 09181111111 یا staff1" required class="input-dark text-left font-mono" dir="ltr">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">رمز عبور پرسنل:</label>
@@ -278,12 +295,14 @@
   </div>
 
   <script>
-    let allPharmacies = JSON.parse(localStorage.getItem('pharma_multi_db_v3')) || {
-      "ADMIN-888": {
-        shopName: "داروخانه مرکزی (پیش‌فرض)",
+    let allPharmacies = JSON.parse(localStorage.getItem('pharma_multi_db_v6')) || {
+      "09123456789": {
+        shopName: "داروخانه مرکزی (پیش‌‌فرض)",
         adminName: "مدیر کل سیستم",
-        password: "123",
-        staff: [{ name: "کارمند 1", id: "staff-1", pass: "123" }],
+        phone: "09123456789",
+        adminId: "09123456789",
+        password: "Admin@123",
+        staff: [{ name: "کارمند 1", phone: "09181111111", id: "09181111111", pass: "Staff@123" }],
         items: [], inbound: [], outbound: [], returns: [],
         smartDB: { "6260012345678": { name: "قرص استامینوفن ۵۰۰", mfg: "1404/01/01", exp: "1409/01/01", batch: "12", sell: 15000 } }
       }
@@ -295,7 +314,7 @@
     let myChart = null;
 
     function saveAll() {
-      localStorage.setItem('pharma_multi_db_v3', JSON.stringify(allPharmacies));
+      localStorage.setItem('pharma_multi_db_v6', JSON.stringify(allPharmacies));
     }
 
     function showLoginScreen() {
@@ -306,19 +325,33 @@
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('register-screen').classList.remove('hidden');
     }
+
     function showForgotPassword() {
-      let id = prompt("لطفاً آیدی پرسنلی یا مدیر خود را وارد کنید:");
-      if (!id) return;
-      let foundShop = null;
+      let inputVal = prompt("لطفاً شماره موبایل یا آیدی کاربری خود را وارد کنید:");
+      if (!inputVal) return;
+      
+      let foundShopKey = null;
+      let matchedData = null;
+
       for (let key in allPharmacies) {
-        if (key === id) foundShop = allPharmacies[key];
-        let st = allPharmacies[key].staff.find(s => s.id === id);
-        if (st) alert(`رمز عبور کارمند شما: ${st.pass}`);
+        let shop = allPharmacies[key];
+        if (key === inputVal || shop.adminId === inputVal || shop.phone === inputVal) {
+          foundShopKey = key;
+          matchedData = { type: 'admin', name: shop.shopName, pass: shop.password, phone: shop.phone };
+          break;
+        }
+        let st = shop.staff.find(s => s.id === inputVal || s.phone === inputVal);
+        if (st) {
+          foundShopKey = key;
+          matchedData = { type: 'staff', name: st.name, pass: st.pass, phone: st.phone };
+          break;
+        }
       }
-      if (foundShop) {
-        alert(`رمز عبور مدیریت داروخانه '${foundShop.shopName}': ${foundShop.password}`);
-      } else if (!Object.values(allPharmacies).some(s => s.staff.some(x => x.id === id))) {
-        alert("آیدی مورد نظر یافت نشد.");
+
+      if (matchedData) {
+        alert(`📲 [شبیه‌ساز ارسال پیامک]: رمز عبور حساب '${matchedData.name}' با موفقیت به شماره موبایل ${matchedData.phone} پیامک شد.\n\nرمز عبور شما: ${matchedData.pass}`);
+      } else {
+        alert("❌ حساب کاربری یا شماره موبایل مورد نظر یافت نشد.");
       }
     }
 
@@ -333,21 +366,64 @@
       }
     }
 
+    // اعتبارسنجی زنده ۴ شرطی رمز عبور
+    function checkPasswordStrength(pass) {
+      const hasLen = pass.length >= 8;
+      const hasUpper = /[A-Z]/.test(pass);
+      const hasLower = /[a-z]/.test(pass);
+      const hasChar = /[0-9@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pass);
+
+      updateReqUI('req-len', hasLen);
+      updateReqUI('req-upper', hasUpper);
+      updateReqUI('req-lower', hasLower);
+      updateReqUI('req-char', hasChar);
+
+      const btnReg = document.getElementById('btn-submit-reg');
+      if (hasLen && hasUpper && hasLower && hasChar) {
+        btnReg.disabled = false;
+        btnReg.classList.remove('bg-emerald-600/50', 'cursor-not-allowed');
+        btnReg.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+      } else {
+        btnReg.disabled = true;
+        btnReg.classList.add('bg-emerald-600/50', 'cursor-not-allowed');
+        btnReg.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+      }
+    }
+
+    function updateReqUI(elementId, isValid) {
+      const el = document.getElementById(elementId);
+      if (isValid) {
+        el.classList.add('valid');
+        el.querySelector('span').innerText = '✅';
+      } else {
+        el.classList.remove('valid');
+        el.querySelector('span').innerText = '❌';
+      }
+    }
+
     function handleRegisterPharmacy(e) {
       e.preventDefault();
       const shopName = document.getElementById('reg-shop-name').value.trim();
       const adminName = document.getElementById('reg-admin-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
       const adminId = document.getElementById('reg-admin-id').value.trim();
       const adminPass = document.getElementById('reg-admin-pass').value.trim();
 
-      if (allPharmacies[adminId]) {
-        alert("این آیدی قبلاً ثبت شده است. لطفاً آیدی دیگری انتخاب کنید.");
+      if (!/^09\d{9}$/.test(phone)) {
+        alert("لطفاً شماره موبایل معتبر ۱۱ رقمی با 09 وارد کنید.");
+        return;
+      }
+
+      if (allPharmacies[adminId] || Object.values(allPharmacies).some(s => s.adminId === adminId)) {
+        alert("این آیدی یا شماره کاربری قبلاً ثبت شده است.");
         return;
       }
 
       allPharmacies[adminId] = {
         shopName: shopName,
         adminName: adminName,
+        phone: phone,
+        adminId: adminId,
         password: adminPass,
         staff: [],
         items: [], inbound: [], outbound: [], returns: [],
@@ -360,27 +436,35 @@
 
     function handleLogin(e) {
       e.preventDefault();
-      const id = document.getElementById('login-id').value.trim();
+      const idInput = document.getElementById('login-id').value.trim();
       const pass = document.getElementById('login-pass').value.trim();
 
-      if (allPharmacies[id] && allPharmacies[id].password === pass) {
-        currentShopKey = id;
-        currentUser = { name: allPharmacies[id].adminName, id: id, role: "مدیر کل داروخانه" };
+      // چک کردن مدیران کل (با کلید اصلی یا ایدی متنی ذخیره شده)
+      if (allPharmacies[idInput] && allPharmacies[idInput].password === pass) {
+        currentShopKey = idInput;
+        currentUser = { name: allPharmacies[idInput].adminName, id: idInput, role: "مدیر کل داروخانه" };
         startAppSession();
         return;
       }
 
       for (let key in allPharmacies) {
-        let staffMember = allPharmacies[key].staff.find(s => s.id === id && s.pass === pass);
+        let shop = allPharmacies[key];
+        if (shop.adminId === idInput && shop.password === pass) {
+          currentShopKey = key;
+          currentUser = { name: shop.adminName, id: idInput, role: "مدیر کل داروخانه" };
+          startAppSession();
+          return;
+        }
+        let staffMember = shop.staff.find(s => (s.id === idInput || s.phone === idInput) && s.pass === pass);
         if (staffMember) {
           currentShopKey = key;
-          currentUser = { name: staffMember.name, id: id, role: "پرسنل انبار" };
+          currentUser = { name: staffMember.name, id: idInput, role: "پرسنل انبار" };
           startAppSession();
           return;
         }
       }
 
-      alert("❌ آیدی یا رمز عبور اشتباه است.");
+      alert("❌ آیدی/شماره یا رمز عبور اشتباه است.");
     }
 
     function startAppSession() {
@@ -392,7 +476,7 @@
       document.getElementById('header-shop-title').innerText = shop.shopName;
       document.getElementById('header-role').innerText = `نقش: ${currentUser.role}`;
       document.getElementById('profile-name').innerText = currentUser.name;
-      document.getElementById('profile-meta').innerText = `آیدی: ${currentUser.id} | ${shop.shopName}`;
+      document.getElementById('profile-meta').innerText = `شناسه ورود: ${currentUser.id} | ${shop.shopName}`;
 
       if (currentUser.role.includes("مدیر")) {
         document.getElementById('btn-staff-manage').classList.remove('hidden');
@@ -420,20 +504,27 @@
     function addStaff(e) {
       e.preventDefault();
       let name = document.getElementById('staff-name').value.trim();
+      let phone = document.getElementById('staff-phone').value.trim();
       let id = document.getElementById('staff-id').value.trim();
       let pass = document.getElementById('staff-pass').value.trim();
 
-      let shop = allPharmacies[currentShopKey];
-      if (shop.staff.some(s => s.id === id) || allPharmacies[id]) {
-        alert("این آیدی تکراری است.");
+      if (!/^09\d{9}$/.test(phone)) {
+        alert("شماره موبایل پرسنل باید ۱۱ رقمی و با 09 شروع شود.");
         return;
       }
 
-      shop.staff.push({ name, id, pass });
+      let shop = allPharmacies[currentShopKey];
+      if (shop.staff.some(s => s.id === id || s.phone === phone)) {
+        alert("این آیدی یا شماره پرسنلی تکراری است.");
+        return;
+      }
+
+      shop.staff.push({ name, phone, id, pass });
       saveAll();
       renderStaffList();
       alert("✅ پرسنل جدید با موفقیت اضافه شد.");
       document.getElementById('staff-name').value = '';
+      document.getElementById('staff-phone').value = '';
       document.getElementById('staff-id').value = '';
       document.getElementById('staff-pass').value = '';
     }
@@ -448,7 +539,7 @@
         <div class="bg-[#060911] p-2.5 rounded-xl border border-slate-800 flex justify-between items-center">
           <div>
             <span class="font-bold text-white">${s.name}</span>
-            <span class="text-[10px] text-slate-400 font-mono block">آیدی: ${s.id} | رمز: ${s.pass}</span>
+            <span class="text-[10px] text-slate-400 font-mono block">آیدی: ${s.id} | موبایل: ${s.phone} | رمز: ${s.pass}</span>
           </div>
           <button onclick="removeStaff(${idx})" class="text-rose-400 text-xs">حذف</button>
         </div>
