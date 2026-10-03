@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://v1.fontapi.ir/css/Vazirmatn');
-    * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; }
+    * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
     body { background-color: #080c14; color: #f1f5f9; min-height: 100vh; }
     .glass-card { background: linear-gradient(135deg, #131b2e 0%, #0f172a 100%); border: 1px solid #1e293b; border-radius: 1.25rem; box-shadow: 0 12px 35px -10px rgba(0,0,0,0.6); }
     .input-dark { background: #060911; border: 1px solid #1e293b; color: #ffffff; border-radius: 0.85rem; padding: 0.7rem 1rem; width: 100%; outline: none; font-size: 0.85rem; transition: all 0.3s; }
@@ -359,10 +359,10 @@
       const field = document.getElementById(fieldId);
       if (field.type === "password") {
         field.type = "text";
-        btn.innerText = "🙈";
+        btn.innerText = "🔒";
       } else {
         field.type = "password";
-        btn.innerText = "👁️";
+        btn.innerText = "👁️️";
       }
     }
 
