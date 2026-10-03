@@ -81,7 +81,7 @@
             <input type="password" id="reg-pass" placeholder="Admin@123" required class="input-dark text-left pl-10" dir="ltr">
             <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️</button>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">حداقل ۸ کاراکتر شامل حروف و عدد</p>
+          <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">حداقل ۸ کاراکتر، شامل حرف بزرگ، حرف کوچک، عدد و علامت خاص (@$!%*?&)</p>
         </div>
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all text-xs">ثبت و ایجاد حساب</button>
         <button type="button" onclick="switchAuthView('login')" class="w-full text-center text-xs text-slate-400 pt-1">بازگشت به ورود</button>
@@ -448,11 +448,41 @@
     function handleRegister(e) {
       e.preventDefault();
       const userid = document.getElementById('reg-userid').value.trim();
-      if (pharmacyData.staff.some(s => s.userid === userid)) { alert('این آیدی قبلاً ثبت شده است.'); return; }
+      const phone = document.getElementById('reg-phone').value.trim();
+      const pass = document.getElementById('reg-pass').value;
+
+      // بررسی شرایط ۴ گانه رمز عبور
+      const minLength = pass.length >= 8;
+      const hasUpper = /[A-Z]/.test(pass);
+      const hasLower = /[a-z]/.test(pass);
+      const hasNum = /[0-9]/.test(pass);
+      const hasSpecial = /[^A-Za-z0-9]/.test(pass);
+
+      if (!minLength || !hasUpper || !hasLower || !hasNum || !hasSpecial) {
+        alert('رمز عبور باید حداقل ۸ کاراکتر و شامل حروف بزرگ، حروف کوچک، عدد و علامت خاص باشد.');
+        return;
+      }
+
+      if (pharmacyData.staff.some(s => s.userid === userid)) {
+        alert('این آیدی پرسنلی قبلاً ثبت شده است و تکراری می‌باشد.');
+        return;
+      }
+
+      if (pharmacyData.staff.some(s => s.phone === phone)) {
+        alert('این شماره همراه قبلاً در سیستم ثبت شده است.');
+        return;
+      }
+
       pharmacyData.name = document.getElementById('reg-pname').value;
-      pharmacyData.staff.push({ name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value, role: 'مدیر کل', userid, pass: document.getElementById('reg-pass').value });
+      pharmacyData.staff.push({ 
+        name: document.getElementById('reg-name').value, 
+        phone: phone, 
+        role: 'مدیر کل', 
+        userid, 
+        pass 
+      });
       saveDB();
-      alert('ثبت‌نام با موفقیت انجام شد.');
+      alert('ثبت‌نام مجموعه با موفقیت انجام شد.');
       switchAuthView('login');
     }
 
