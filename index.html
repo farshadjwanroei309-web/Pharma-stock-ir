@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PharmaStock Pro - سامانه جامع انبارداری هوشمند</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <!-- استفاده از کتابخانه استاندارد و قدرتمند ZXing برای اسکن صددرصدی روی موبایل -->
+  <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://v1.fontapi.ir/css/Vazirmatn');
@@ -22,7 +23,7 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-  <!-- صفحه ورود -->
+  <!-- صفحه ورود (سر جای اولش برگشت) -->
   <div id="auth-screen" class="flex-1 flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-md p-6 sm:p-8 space-y-6">
       <div class="text-center space-y-2">
@@ -135,7 +136,7 @@
     </main>
   </div>
 
-  <!-- مودال یکپارچه ثبت کالا و اسکنر هوشمند اصلاح‌شده -->
+  <!-- مودال ثبت کالا و اسکنر دوربین اصلاح‌شده با ZXing -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-md p-4 space-y-3 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -143,20 +144,17 @@
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-base">✕</button>
       </div>
 
-      <!-- اسکنر دوربین و گالری -->
+      <!-- اسکنر دوربین با ZXing -->
       <div class="bg-black/40 p-2.5 rounded-xl border border-slate-800 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold text-cyan-400">📷 اسکنر هوشمند بارکد</span>
+          <span class="text-[11px] font-bold text-cyan-400">📷 اسکنر دوربین</span>
           <div class="flex gap-1.5">
             <button type="button" onclick="startCameraScan()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">روشن کردن دوربین</button>
-            <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer">
-              آپلود عکس
-              <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
-            </label>
+            <button type="button" onclick="stopCameraScan()" class="bg-rose-600 hover:bg-rose-500 text-white px-2 py-1 rounded-lg text-[10px]">توقف</button>
           </div>
         </div>
-        <div id="cam-box" class="border border-cyan-500/40 rounded-lg overflow-hidden bg-black hidden p-1">
-          <div id="reader" style="width: 100%; min-height: 200px;"></div>
+        <div id="cam-box" class="border border-cyan-500/40 rounded-lg overflow-hidden bg-black hidden p-1 relative">
+          <video id="video" class="w-full h-48 object-cover rounded" autoplay muted playsinline></video>
         </div>
       </div>
 
@@ -219,21 +217,19 @@
         "6260012345678": { name: "قرص استامینوفن ۵۰۰", mfg: "1404/01/01", exp: "1409/01/01", batch: "12", sell: 15000 }
       } 
     };
-    let html5QrcodeScanner = null;
+    let codeReader = null;
     let myChart = null;
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v18');
+      const saved = localStorage.getItem('pharma_pro_db_v19');
       if (saved) { try { pharmacyData = JSON.parse(saved); } catch(e){} }
-      openApp();
+      // لزوم نمایش صفحه ورود در ابتدا
     };
 
     function handleLogin(e) {
       e.preventDefault();
-      openApp();
-    }
-
-    function openApp() {
+      const id = document.getElementById('login-id').value;
+      currentUser.userid = id;
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
       document.getElementById('profile-name').innerText = currentUser.name;
@@ -246,7 +242,7 @@
       document.getElementById('auth-screen').classList.remove('hidden');
     }
 
-    function saveDB() { localStorage.setItem('pharma_pro_db_v18', JSON.stringify(pharmacyData)); }
+    function saveDB() { localStorage.setItem('pharma_pro_db_v19', JSON.stringify(pharmacyData)); }
 
     function updateStats() {
       let items = pharmacyData.items || [];
@@ -256,11 +252,10 @@
       document.getElementById('stat-critical').innerText = items.filter(i => i.qty <= 20).length + ' قلم';
     }
 
-    // تشخیص خودکار اطلاعات از روی بارکد
     function autoFillByBarcode(raw) {
       if (!raw) return;
       let text = raw.trim();
-      let gtin = text.replace(/[^0-9]/g, '').slice(0, 14);
+      let gtin = text.replace(/[^0-9]/g, '');
       if (!gtin) gtin = text;
       document.getElementById('m-gtin').value = gtin;
 
@@ -272,7 +267,6 @@
         document.getElementById('m-batch').value = info.batch || '';
         if(info.sell) document.getElementById('m-sell').value = info.sell;
       } else {
-        // اگر بارکد جدید بود، مقادیر پیش‌فرض هوشمند قرار بده
         document.getElementById('m-name').value = `دارو / کالا با بارکد (${gtin})`;
         document.getElementById('m-mfg').value = '1404/01/01';
         document.getElementById('m-exp').value = '1409/01/01';
@@ -295,42 +289,30 @@
 
     function closeModal() {
       document.getElementById('item-modal').classList.add('hidden');
-      if (html5QrcodeScanner) {
-        html5QrcodeScanner.stop().catch(()=>{});
-      }
+      stopCameraScan();
     }
 
+    // راه‌اندازی اسکنر دوربین با موتور قدرتمند ZXing
     function startCameraScan() {
       document.getElementById('cam-box').classList.remove('hidden');
-      if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5Qrcode("reader");
+      if (!codeReader) {
+        codeReader = new ZXing.BrowserBarcodeReader();
       }
-      html5QrcodeScanner.start(
-        { facingMode: "environment" },
-        { fps: 15, qrbox: { width: 250, height: 120 } },
-        (decodedText) => {
-          autoFillByBarcode(decodedText);
-          html5QrcodeScanner.stop().catch(()=>{});
+      codeReader.decodeFromVideoDevice(null, 'video', (result, err) => {
+        if (result) {
+          autoFillByBarcode(result.text);
+          stopCameraScan();
           document.getElementById('cam-box').classList.add('hidden');
-        },
-        (error) => {}
-      ).catch((err) => {
-        alert('خطا در دسترسی به دوربین. لطفاً از طریق آپلود عکس اقدام کنید.');
+        }
+      }).catch(err => {
+        alert('خطا در دسترسی به دوربین. لطفاً دسترسی دوربین را بررسی کنید.');
       });
     }
 
-    function scanImageFromGallery(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.scanFile(file, true)
-        .then(text => { 
-          autoFillByBarcode(text); 
-        })
-        .catch(() => { 
-          // به عنوان نمونه در صورت عدم تشخیص عکس شربت تست بالا را لود میکند
-          autoFillByBarcode("06260803003118"); 
-        });
+    function stopCameraScan() {
+      if (codeReader) {
+        codeReader.reset();
+      }
     }
 
     function submitItem() {
@@ -348,7 +330,6 @@
       const time = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date());
       const record = { name, gtin, qty, mfg, exp, batch, sell, user: currentUser.name, time };
 
-      // ذخیره در دیتابیس هوشمند برای دفعات بعدی
       pharmacyData.smartDB[gtin] = { name, mfg, exp, batch, sell };
 
       if (type === 'ورودی انبار') {
