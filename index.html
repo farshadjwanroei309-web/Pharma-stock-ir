@@ -79,7 +79,7 @@
           <label class="block text-xs text-slate-300 mb-1">رمز عبور:</label>
           <div class="relative">
             <input type="password" id="reg-pass" placeholder="Admin@123" required class="input-dark text-left pl-10" dir="ltr">
-            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️</button>
+            <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️️</button>
           </div>
         </div>
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all text-xs">ثبت و ایجاد حساب</button>
@@ -133,9 +133,18 @@
             <p id="profile-meta" class="text-[10px] text-slate-400 font-mono mt-0.5">--</p>
           </div>
           <button onclick="openModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow-lg shadow-cyan-600/20 flex items-center gap-1.5">
-            <span>➕</span> ثبت کالا جدید
+            <span>➕</span> ثبت کالا جدید / اسکن هوشمند
           </button>
         </div>
+      </div>
+
+      <!-- کادر اختصاصی هشدارهای انقضای زیر ۳۰ روز -->
+      <div id="expiry-warning-box" class="glass-card p-3.5 border-rose-500/40 bg-rose-950/20 hidden space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⏳</span>
+          <h3 class="text-xs font-bold text-rose-400">هشدار فوری: اقلام در آستانه انقضا (کمتر از ۳۰ روز مانده یا منقضی شده)</h3>
+        </div>
+        <div id="expiry-warning-list" class="space-y-1.5 pt-1"></div>
       </div>
 
       <div class="grid grid-cols-3 gap-3">
@@ -155,7 +164,6 @@
 
       <div class="flex border-b border-slate-800 text-xs overflow-x-auto gap-2">
         <button id="tab-btn-inv" onclick="switchAppTab('inv')" class="py-2.5 px-4 font-bold border-b-2 border-cyan-400 text-cyan-400 whitespace-nowrap">📦 موجودی انبار</button>
-        <button id="tab-btn-scan" onclick="switchAppTab('scan')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📷 اسکنر هوشمند</button>
         <button id="tab-btn-report" onclick="switchAppTab('report')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📈 گزارش هفتگی و ماهانه</button>
         <button id="tab-btn-tx" onclick="switchAppTab('tx')" class="py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap">📑 تراکنش‌ها و فاکتور</button>
       </div>
@@ -164,25 +172,6 @@
         <input type="text" oninput="searchItems(this.value)" placeholder="🔍 جستجوی نام دارو، بارکد یا سری ساخت..." class="input-dark text-xs">
         <div id="inventory-list" class="space-y-2">
           <div class="p-8 text-center text-xs text-slate-500">موجودی انبار خالی است.</div>
-        </div>
-      </div>
-
-      <div id="sec-scan" class="hidden space-y-4">
-        <div class="glass-card p-6 text-center space-y-3 border-cyan-500/30">
-          <div class="w-14 h-14 bg-cyan-500/15 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-cyan-500/30">📷</div>
-          <div class="space-y-1">
-            <h3 class="font-bold text-white text-sm">اسکن هوشمند بارکد با تشخیص خودکار</h3>
-            <p class="text-[11px] text-slate-400">شناسایی آنی اقلام، تاریخ انقضا و اطلاعات ساخت</p>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-3 max-w-md mx-auto">
-            <button onclick="openCameraModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20">
-              <span>📷</span> اسکن زنده با دوربین
-            </button>
-            <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow">
-              <span>📁</span> انتخاب عکس از گالری
-              <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
-            </label>
-          </div>
         </div>
       </div>
 
@@ -295,25 +284,42 @@
     </div>
   </div>
 
+  <!-- مودال یکپارچه ثبت کالا و اسکنر هوشمند -->
   <div id="item-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-card w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white">ثبت کالا / داروی جدید در انبار</h3>
+        <h3 id="modal-title-text" class="font-bold text-sm text-white">ثبت کالا / اسکن هوشمند بارکد</h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
       </div>
 
-      <div id="gallery-preview-container" class="hidden text-center bg-black/40 p-2 rounded-xl border border-slate-800">
-        <img id="previewImage" class="max-h-32 mx-auto rounded-lg object-contain border border-slate-700">
+      <!-- ابزار اسکن زنده و گالری در بالای فرم -->
+      <div class="bg-black/40 p-3 rounded-xl border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-cyan-400">📷 اسکنر هوشمند (خطی و دوبعدی)</span>
+          <div class="flex gap-2">
+            <button type="button" onclick="openCameraModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow">اسکن با دوربین</button>
+            <label class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer">
+              آپلود عکس
+              <input type="file" accept="image/*" onchange="scanImageFromGallery(event)" class="hidden">
+            </label>
+          </div>
+        </div>
+
+        <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black hidden">
+          <div id="reader" class="w-full"></div>
+        </div>
+
+        <div id="gallery-preview-container" class="hidden text-center">
+          <img id="previewImage" class="max-h-28 mx-auto rounded-lg object-contain border border-slate-700">
+        </div>
       </div>
 
-      <div id="cam-box" class="border border-cyan-500/50 rounded-xl overflow-hidden p-2 bg-black hidden">
-        <div id="reader" class="w-full"></div>
-      </div>
+      <input type="hidden" id="edit-index" value="-1">
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 mb-1">بارکد (GTIN / IRC):</label>
-          <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="06260803003118" class="input-dark font-mono text-left" dir="ltr">
+          <label class="block text-slate-400 mb-1">بارکد (GTIN / IRC / خطی):</label>
+          <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="اسکن یا وارد کنید..." class="input-dark font-mono text-left" dir="ltr">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">نام کالا / دارو:</label>
@@ -355,7 +361,7 @@
         <div class="grid grid-cols-3 gap-2 pt-1">
           <div>
             <label class="block text-slate-400 mb-1">نقطه هشدار:</label>
-            <input type="number" id="m-min" value="5" class="input-dark text-center font-mono">
+            <input type="number" id="m-min" value="20" class="input-dark text-center font-mono">
           </div>
           <div>
             <label class="block text-slate-400 mb-1">قیمت خرید:</label>
@@ -366,9 +372,8 @@
             <input type="number" id="m-sell" placeholder="0" class="input-dark text-center font-mono">
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2 pt-3">
-          <button onclick="submitItem('in')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs shadow">➕ ثبت ورود کالا</button>
-          <button onclick="submitItem('out')" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl text-xs shadow">➖ ثبت فروش / خروج</button>
+        <div class="pt-3">
+          <button onclick="submitItem()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-cyan-600/30">💾 ذخیره و ثبت در انبار</button>
         </div>
       </div>
     </div>
@@ -381,14 +386,14 @@
     let myChart = null;
 
     const defaultGlobalBarcodeDB = {
-      "06260803003118": { name: "دارو / محصول پزشکی تخصصی", mfg: "1404/10/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-2", min: 5 },
-      "6263067901282": { name: "شربت / داروی تخصصی", mfg: "1405/01/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-1", min: 5 },
-      "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1", min: 5 },
-      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2", min: 10 }
+      "06260803003118": { name: "دارو / محصول پزشکی تخصصی", mfg: "1404/10/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-2", min: 20 },
+      "6263067901282": { name: "شربت / داروی تخصصی", mfg: "1405/01/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-1", min: 20 },
+      "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1", min: 20 },
+      "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2", min: 20 }
     };
 
     window.onload = function() {
-      const saved = localStorage.getItem('pharma_pro_db_v15');
+      const saved = localStorage.getItem('pharma_pro_db_v16');
       if (saved) { try { pharmacyData = JSON.parse(saved); } catch(e){} }
       if (!pharmacyData.smartDB) {
         pharmacyData.smartDB = defaultGlobalBarcodeDB;
@@ -418,7 +423,7 @@
       else { input.type = 'password'; btn.innerText = '👁️'; }
     }
 
-    function saveDB() { localStorage.setItem('pharma_pro_db_v15', JSON.stringify(pharmacyData)); }
+    function saveDB() { localStorage.setItem('pharma_pro_db_v16', JSON.stringify(pharmacyData)); }
 
     function switchAuthView(v) {
       document.getElementById('form-login').classList.add('hidden');
@@ -463,7 +468,7 @@
       document.getElementById('header-role').innerText = `نقش: ${currentUser.role}`;
       document.getElementById('header-shop-title').innerText = pharmacyData.name;
       if (currentUser.role !== 'مدیر کل') document.getElementById('staff-btn').classList.add('hidden');
-      renderItems(); renderTxs(); updateStats();
+      renderItems(); renderTxs(); updateStats(); checkExpiryAlerts();
     }
 
     function logout() {
@@ -475,22 +480,19 @@
     function updateStats() {
       let items = pharmacyData.items || [];
       let totalVal = items.reduce((sum, i) => sum + (i.qty * (i.sell || 0)), 0);
-      let warningCount = items.filter(i => i.qty > 0 && i.qty <= (i.min || 5)).length;
-      let criticalCount = items.filter(i => i.qty <= 0).length;
+      let warningCount = items.filter(i => i.qty > 20 && i.qty <= 50).length;
+      let criticalCount = items.filter(i => i.qty <= 20).length;
 
       document.getElementById('stat-val').innerText = totalVal.toLocaleString() + ' تومان';
       document.getElementById('stat-warning').innerText = warningCount + ' قلم';
       document.getElementById('stat-critical').innerText = criticalCount + ' قلم';
     }
 
-    // تابع اصلاح‌شده و دقیق برای خواندن بارکد دوبعدی (DataMatrix) و پر کردن خودکار فیلدها
+    // اسکنر بسیار سریع و دقیق برای بارکد خطی و مربعی (DataMatrix / GS1)
     function parseGS1(raw) {
       if (!raw) return;
       let text = raw.trim();
-      
-      let gtin = "";
-      let batch = "";
-      let exp = "";
+      let gtin = "", batch = "", exp = "";
 
       let gMatch = text.match(/GTIN[:\s]*([0-9]{13,14})/i);
       let lMatch = text.match(/(?:LOT|UID|BATCH)[:\s]*([A-Za-z0-9-]+)/i);
@@ -536,15 +538,15 @@
         if (info.exp && !exp && document.getElementById('m-exp')) document.getElementById('m-exp').value = info.exp;
         if (info.batch && !batch && document.getElementById('m-batch')) document.getElementById('m-batch').value = info.batch;
         if (document.getElementById('m-loc')) document.getElementById('m-loc').value = info.loc || 'قفسه عمومی';
-        if (info.min && document.getElementById('m-min')) document.getElementById('m-min').value = info.min;
       } else {
-        if (document.getElementById('m-name')) {
+        if (document.getElementById('m-name') && !document.getElementById('m-name').value) {
           document.getElementById('m-name').value = `دارو / محصول (${gtin.slice(-4)})`;
         }
       }
     }
 
     function clearModalForm() {
+      document.getElementById('edit-index').value = '-1';
       document.getElementById('m-gtin').value = '';
       document.getElementById('m-name').value = '';
       document.getElementById('m-mfg').value = '';
@@ -556,6 +558,7 @@
       document.getElementById('m-sell').value = '';
       document.getElementById('gallery-preview-container').classList.add('hidden');
       document.getElementById('cam-box').classList.add('hidden');
+      document.getElementById('modal-title-text').innerText = 'ثبت کالا / اسکن هوشمند بارکد';
     }
 
     function openModal() {
@@ -566,14 +569,12 @@
     function scanImageFromGallery(e) {
       const file = e.target.files[0];
       if (!file) return;
-      clearModalForm();
       const reader = new FileReader();
       reader.onload = function(evt) {
         document.getElementById('previewImage').src = evt.target.result;
         document.getElementById('gallery-preview-container').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
-      document.getElementById('item-modal').classList.remove('hidden');
 
       const html5QrCode = new Html5Qrcode("reader");
       html5QrCode.scanFile(file, true)
@@ -584,13 +585,11 @@
     }
 
     function openCameraModal() {
-      clearModalForm();
       document.getElementById('cam-box').classList.remove('hidden');
-      document.getElementById('item-modal').classList.remove('hidden');
       if (!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("reader");
       html5QrcodeScanner.start(
         { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 250, height: 250 } },
+        { fps: 15, qrbox: { width: 250, height: 250 } },
         (text) => {
           parseGS1(text);
           html5QrcodeScanner.stop().catch(()=>{});
@@ -605,7 +604,8 @@
       if (html5QrcodeScanner) html5QrcodeScanner.stop().catch(()=>{});
     }
 
-    function submitItem(type) {
+    function submitItem() {
+      const editIdx = parseInt(document.getElementById('edit-index').value);
       const name = document.getElementById('m-name').value;
       const gtin = document.getElementById('m-gtin').value;
       const qty = parseInt(document.getElementById('m-qty').value) || 0;
@@ -614,7 +614,7 @@
       const exp = document.getElementById('m-exp').value || '1406/12/29';
       const loc = document.getElementById('m-loc').value || 'قفسه عمومی';
       const storage = document.getElementById('m-temp').value;
-      const min = parseInt(document.getElementById('m-min').value) || 5;
+      const min = parseInt(document.getElementById('m-min').value) || 20;
       const buy = parseFloat(document.getElementById('m-buy').value) || 0;
       const sell = parseFloat(document.getElementById('m-sell').value) || 0;
 
@@ -622,27 +622,98 @@
       if (!pharmacyData.smartDB) pharmacyData.smartDB = {};
       pharmacyData.smartDB[gtin] = { name, mfg, exp, batch, loc, min };
 
-      let items = pharmacyData.items;
-      let existing = items.find(i => i.gtin === gtin);
-      if (type === 'in') {
-        if (existing) existing.qty += qty;
-        else items.push({ gtin, name, qty, batch, mfg, exp, loc, storage, min, buy, sell });
-      } else {
-        if (existing && existing.qty >= qty) existing.qty -= qty;
-        else { alert('موجودی انبار کافی نیست!'); return; }
-      }
-
       const timestamp = new Date().getTime();
       const now = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date());
-      let typeLabel = type === 'in' ? 'ورود کالا' : 'فروش / خروج';
-      pharmacyData.txs.unshift({ type: typeLabel, name, gtin, qty, sell, user: currentUser.name, time: now, timestamp });
+      const userName = currentUser ? currentUser.name : 'مدیر سیستم';
+
+      let items = pharmacyData.items;
+
+      if (editIdx >= 0 && editIdx < items.length) {
+        items[editIdx] = { ...items[editIdx], name, gtin, qty, batch, mfg, exp, loc, storage, min, buy, sell };
+        pharmacyData.txs.unshift({ type: 'ویرایش کالا', name, gtin, qty, sell, user: userName, time: now, timestamp });
+      } else {
+        items.push({ gtin, name, qty, batch, mfg, exp, loc, storage, min, buy, sell, user: userName, time: now });
+        pharmacyData.txs.unshift({ type: 'ورود کالا', name, gtin, qty, sell, user: userName, time: now, timestamp });
+      }
 
       saveDB();
       closeModal();
       renderItems();
       renderTxs();
       updateStats();
+      checkExpiryAlerts();
       alert('✅ با موفقیت ثبت شد.');
+    }
+
+    function editItem(index) {
+      let i = pharmacyData.items[index];
+      if (!i) return;
+      document.getElementById('edit-index').value = index;
+      document.getElementById('m-gtin').value = i.gtin || '';
+      document.getElementById('m-name').value = i.name || '';
+      document.getElementById('m-mfg').value = i.mfg || '';
+      document.getElementById('m-exp').value = i.exp || '';
+      document.getElementById('m-batch').value = i.batch || '';
+      document.getElementById('m-qty').value = i.qty || 0;
+      document.getElementById('m-loc').value = i.loc || '';
+      document.getElementById('m-temp').value = i.storage || 'معمولی (دمای اتاق)';
+      document.getElementById('m-min').value = i.min || 20;
+      document.getElementById('m-buy').value = i.buy || 0;
+      document.getElementById('m-sell').value = i.sell || 0;
+      document.getElementById('modal-title-text').innerText = 'ویرایش مشخصات کالا';
+      document.getElementById('item-modal').classList.remove('hidden');
+    }
+
+    function deleteItem(index) {
+      if (!confirm('آیا از حذف این کالا مطمئن هستید؟')) return;
+      let removed = pharmacyData.items.splice(index, 1)[0];
+      const timestamp = new Date().getTime();
+      const now = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short', timeStyle: 'medium' }).format(new Date());
+      pharmacyData.txs.unshift({ type: 'حذف کالا', name: removed.name, gtin: removed.gtin, qty: removed.qty, sell: removed.sell, user: currentUser.name, time: now, timestamp });
+      saveDB();
+      renderItems();
+      renderTxs();
+      updateStats();
+      checkExpiryAlerts();
+    }
+
+    function deleteTx(index) {
+      if (!confirm('آیا از حذف این تراکنش مطمئن هستید؟')) return;
+      pharmacyData.txs.splice(index, 1);
+      saveDB();
+      renderTxs();
+    }
+
+    // تشخیص تاریخ انقضا و انتقال خودکار به بخش هشدار ۳۰ روز
+    function checkExpiryAlerts() {
+      let items = pharmacyData.items || [];
+      const box = document.getElementById('expiry-warning-box');
+      const list = document.getElementById('expiry-warning-list');
+      const now = new Date();
+
+      let expiringItems = items.filter(i => {
+        if (!i.exp) return false;
+        // تبدیل تاریخ انقضا به فرمت قابل مقایسه
+        let expDate = new Date(i.exp.replace(/\//g, '-'));
+        if (isNaN(expDate)) return false;
+        let diffDays = (expDate - now) / (1000 * 60 * 60 * 24);
+        return diffDays <= 30; // ۳۰ روز یا کمتر
+      });
+
+      if (expiringItems.length > 0) {
+        box.classList.remove('hidden');
+        list.innerHTML = expiringItems.map(i => `
+          <div class="bg-rose-950/40 p-2 rounded-lg border border-rose-500/30 flex justify-between items-center text-xs">
+            <div>
+              <span class="font-bold text-white">${i.name}</span>
+              <span class="text-rose-300 font-mono text-[10px] mr-2">(انقضا: ${i.exp})</span>
+            </div>
+            <span class="badge-status bg-red-soft">⚠️ در آستانه انقضا</span>
+          </div>
+        `).join('');
+      } else {
+        box.classList.add('hidden');
+      }
     }
 
     function renderItems() {
@@ -650,14 +721,15 @@
       let items = pharmacyData.items;
       if (items.length === 0) { box.innerHTML = `<div class="p-8 text-center text-xs text-slate-500">موجودی انبار خالی است.</div>`; return; }
       
-      box.innerHTML = items.map(i => {
-        let badge = `<span class="badge-status bg-green-soft">🟢 موجود (امن)</span>`;
+      box.innerHTML = items.map((i, index) => {
+        let badge = `<span class="badge-status bg-green-soft">🟢 موجود امن (۵۰ تا ۱۰۰+)</span>`;
         let borderClass = "border-l-4 border-l-emerald-500";
-        if (i.qty <= 0) {
-          badge = `<span class="badge-status bg-red-soft">🔴 بحرانی (ناموجود)</span>`;
+
+        if (i.qty <= 20) {
+          badge = `<span class="badge-status bg-red-soft">🔴 بحرانی / اتمام (زیر ۲۰)</span>`;
           borderClass = "border-l-4 border-l-rose-500";
-        } else if (i.qty <= (i.min || 5)) {
-          badge = `<span class="badge-status bg-yellow-soft">🟡 اخطار نقطه سفارش</span>`;
+        } else if (i.qty <= 50) {
+          badge = `<span class="badge-status bg-yellow-soft">🟡 اخطار کاهش (۲۰ تا ۵۰)</span>`;
           borderClass = "border-l-4 border-l-amber-500";
         }
 
@@ -670,10 +742,15 @@
               </div>
               <p class="text-[10px] text-slate-400 font-mono">بارکد: ${i.gtin} | انقضا: ${i.exp} | بچ: ${i.batch}</p>
               <p class="text-[10px] text-cyan-300">موقعیت: ${i.loc} (${i.storage})</p>
+              <p class="text-[10px] text-slate-400">ثبت‌کننده: <span class="text-slate-200 font-semibold">${i.user || 'نامشخص'}</span> در ${i.time || '—'}</p>
             </div>
-            <div class="text-left space-y-1">
+            <div class="text-left space-y-2">
               <div><span class="text-base font-bold text-cyan-400">${i.qty}</span> <span class="text-[10px] text-slate-400">عدد</span></div>
               <p class="text-[10px] text-slate-300 font-mono">فروش: ${i.sell ? i.sell.toLocaleString() + ' تومان' : '—'}</p>
+              <div class="flex gap-1.5 justify-end pt-1">
+                <button onclick="editItem(${index})" class="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded hover:bg-cyan-500/30 font-semibold">ویرایش</button>
+                <button onclick="deleteItem(${index})" class="px-2 py-1 bg-rose-500/20 text-rose-300 rounded hover:bg-rose-500/30 font-semibold">حذف</button>
+              </div>
             </div>
           </div>
         `;
@@ -684,14 +761,17 @@
       const box = document.getElementById('tx-list');
       let txs = pharmacyData.txs;
       if (txs.length === 0) { box.innerHTML = `<div class="p-8 text-center text-xs text-slate-500">تراکنشی ثبت نشده است.</div>`; return; }
-      box.innerHTML = txs.map(t => `
-        <div class="glass-card p-3 flex justify-between items-center border-l-4 border-l-cyan-500">
+      box.innerHTML = txs.map((t, index) => `
+        <div class="glass-card p-3 flex justify-between items-center border-l-4 border-l-cyan-500 text-xs">
           <div>
             <span class="font-bold text-white">${t.type}</span>
             <span class="text-slate-300 ml-2 font-semibold">${t.name} (${t.qty} عدد)</span>
-            <p class="text-[10px] text-slate-400 mt-0.5">کاربر: ${t.user}</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">کاربر: ${t.user} | زمان: ${t.time}</p>
           </div>
-          <div class="text-left font-mono text-[11px] text-slate-400">${t.time}</div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-[11px] text-cyan-400">${t.sell ? (t.qty * t.sell).toLocaleString() + ' تومان' : ''}</span>
+            <button onclick="deleteTx(${index})" class="px-2 py-1 bg-rose-500/20 text-rose-300 rounded hover:bg-rose-500/30 font-semibold">حذف</button>
+          </div>
         </div>
       `).join('');
     }
@@ -701,19 +781,26 @@
       const filtered = items.filter(i => i.name.includes(q) || i.gtin.includes(q) || i.batch.includes(q));
       const box = document.getElementById('inventory-list');
       if (filtered.length === 0) { box.innerHTML = `<div class="p-8 text-center text-xs text-slate-500">موردی یافت نشد.</div>`; return; }
-      box.innerHTML = filtered.map(i => `
+      box.innerHTML = filtered.map((i, index) => `
         <div class="glass-card p-3 flex justify-between items-center text-xs border-l-4 border-l-emerald-500">
           <div>
             <h4 class="font-bold text-white text-sm">${i.name}</h4>
             <p class="text-[10px] text-slate-400 font-mono">بارکد: ${i.gtin} | انقضا: ${i.exp}</p>
+            <p class="text-[10px] text-slate-400">ثبت‌کننده: ${i.user || '—'} (${i.time || '—'})</p>
           </div>
-          <div class="text-left"><span class="text-base font-bold text-cyan-400">${i.qty}</span></div>
+          <div class="text-left flex items-center gap-3">
+            <div><span class="text-base font-bold text-cyan-400">${i.qty}</span> <span class="text-[10px] text-slate-400">عدد</span></div>
+            <div class="flex gap-1.5">
+              <button onclick="editItem(${index})" class="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded hover:bg-cyan-500/30">ویرایش</button>
+              <button onclick="deleteItem(${index})" class="px-2 py-1 bg-rose-500/20 text-rose-300 rounded hover:bg-rose-500/30">حذف</button>
+            </div>
+          </div>
         </div>
       `).join('');
     }
 
     function switchAppTab(tab) {
-      ['inv', 'scan', 'report', 'tx'].forEach(t => {
+      ['inv', 'report', 'tx'].forEach(t => {
         document.getElementById(`sec-${t}`).classList.add('hidden');
         document.getElementById(`tab-btn-${t}`).className = 'py-2.5 px-4 font-bold text-slate-400 hover:text-white whitespace-nowrap';
       });
@@ -725,8 +812,8 @@
 
     function calculateReports() {
       const nowMs = new Date().getTime();
-      let weeklyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= 7 * 86400000) && t.type.includes('فروش'));
-      let monthlyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= 30 * 86400000) && t.type.includes('فروش'));
+      let weeklyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= 7 * 86400000) && (t.type.includes('ورود') || t.type.includes('فروش')));
+      let monthlyTxs = pharmacyData.txs.filter(t => t.timestamp && (nowMs - t.timestamp <= 30 * 86400000) && (t.type.includes('ورود') || t.type.includes('فروش')));
 
       document.getElementById('rep-weekly-sum').innerText = weeklyTxs.reduce((s, t) => s + (t.qty * (t.sell || 0)), 0).toLocaleString() + ' تومان';
       document.getElementById('rep-weekly-count').innerText = weeklyTxs.length + ' تراکنش';
