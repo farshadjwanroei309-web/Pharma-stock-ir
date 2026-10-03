@@ -235,9 +235,11 @@
 
       <div class="bg-black/40 p-2.5 rounded-xl border border-slate-800 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold text-cyan-400">📷 اسکنر دوربین</span>
-          <div class="flex gap-1.5">
-            <button type="button" onclick="startCameraScan()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">روشن کردن دوربین</button>
+          <span class="text-[11px] font-bold text-cyan-400">📷 اسکنر دوربین و گالری</span>
+          <div class="flex gap-1.5 flex-wrap">
+            <button type="button" onclick="startCameraScan()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold">روشن کردن دوربین</button>
+            <button type="button" onclick="document.getElementById('barcode-file-input').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold">📁 انتخاب از گالری</button>
+            <input type="file" id="barcode-file-input" accept="image/*" class="hidden" onchange="scanBarcodeImageFile(this)">
             <button type="button" onclick="stopCameraScan()" class="bg-rose-600 hover:bg-rose-500 text-white px-2 py-1 rounded-lg text-[10px]">توقف</button>
           </div>
         </div>
@@ -349,7 +351,7 @@
       }
 
       if (matchedData) {
-        alert(`📱 [شبیه‌‌ساز ارسال پیامک]: رمز عبور حساب '${matchedData.name}' با موفقیت به شماره موبایل ${matchedData.phone} پیامک شد.\n\nرمز عبور شما: ${matchedData.pass}`);
+        alert(`📱 [شبیه‌‌‌‌ساز ارسال پیامک]: رمز عبور حساب '${matchedData.name}' با موفقیت به شماره موبایل ${matchedData.phone} پیامک شد.\n\nرمز عبور شما: ${matchedData.pass}`);
       } else {
         alert("❌ حساب کاربری یا شماره موبایل مورد نظر یافت نشد.");
       }
@@ -609,12 +611,47 @@
         if (result) {
           autoFillByBarcode(result.text);
           stopCameraScan();
-          document.getElementById('cam-box').classList.add('hidden');
         }
-      }).catch(err => { alert('خطا در دسترسی به دوربین.'); });
+      }).catch(err => { 
+        console.error(err);
+        alert('خطا در دسترسی به دوربین.'); 
+      });
     }
 
-    function stopCameraScan() { if (codeReader) codeReader.reset(); }
+    function stopCameraScan() { 
+      if (codeReader) codeReader.reset();
+      document.getElementById('cam-box').classList.add('hidden');
+    }
+
+    // تابع اسکن عکس از گالری
+    function scanBarcodeImageFile(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const imgElement = document.createElement('img');
+          imgElement.src = e.target.result;
+          
+          imgElement.onload = function() {
+            if (!codeReader) codeReader = new ZXing.BrowserBarcodeReader();
+            
+            codeReader.decodeFromImage(imgElement)
+              .then(result => {
+                if (result) {
+                  autoFillByBarcode(result.text);
+                  alert('✔️ بارکد با موفقیت از تصویر خوانده شد.');
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert('❌ بارکدی در تصویر یافت نشد یا کیفیت عکس مناسب نیست.');
+              });
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
     function submitItem() {
       const type = document.getElementById('m-txtype').value;
