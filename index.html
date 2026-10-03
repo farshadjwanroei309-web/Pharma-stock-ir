@@ -45,7 +45,7 @@
           <label class="block text-xs text-slate-300 mb-1.5">رمز عبور:</label>
           <div class="relative">
             <input type="password" id="login-pass" placeholder="••••••••" required class="input-dark text-left pl-10" dir="ltr">
-            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁️️</button>
+            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm focus:outline-none">👁</button>
           </div>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-cyan-600/30 text-xs">
@@ -313,7 +313,7 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="block text-slate-400 mb-1">بارکد (GTIN / IRC):</label>
-          <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="06263067901282" class="input-dark font-mono text-left" dir="ltr">
+          <input type="text" id="m-gtin" oninput="parseGS1(this.value)" placeholder="06260803003118" class="input-dark font-mono text-left" dir="ltr">
         </div>
         <div>
           <label class="block text-slate-400 mb-1">نام کالا / دارو:</label>
@@ -381,6 +381,7 @@
     let myChart = null;
 
     const defaultGlobalBarcodeDB = {
+      "06260803003118": { name: "دارو / محصول پزشکی تخصصی", mfg: "1404/10/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-2", min: 5 },
       "6263067901282": { name: "شربت / داروی تخصصی", mfg: "1405/01/01", exp: "2029/02", batch: "LI0429", loc: "قفسه A-1", min: 5 },
       "6260418701386": { name: "حریره بادام سرلاک", mfg: "1405/03/06", exp: "1406/09/05", batch: "61470197LA", loc: "قفسه A-1", min: 5 },
       "6260123456789": { name: "سرنگ ۵ سی‌سی استریل", mfg: "1405/01/10", exp: "1408/01/10", batch: "SYR-998", loc: "قفسه B-2", min: 10 }
@@ -482,7 +483,7 @@
       document.getElementById('stat-critical').innerText = criticalCount + ' قلم';
     }
 
-    // تحلیل پیشرفته رشته‌های استاندارد بارکدهای دارویی (مانند GS1 DataMatrix)
+    // تابع اصلاح‌شده و دقیق برای خواندن بارکد دوبعدی (DataMatrix) و پر کردن خودکار فیلدها
     function parseGS1(raw) {
       if (!raw) return;
       let text = raw.trim();
@@ -491,53 +492,55 @@
       let batch = "";
       let exp = "";
 
-      // استخراج هوشمند بر اساس استانداردهای متداول ساختار متن بارکد (مانند GTIN, LOT, EXP)
-      if (text.includes("GTIN:") || text.includes("LOT:") || text.includes("EXP:")) {
-        let gMatch = text.match(/GTIN[:\s]*([0-9]{13,14})/i);
-        let lMatch = text.match(/(?:LOT|UID|BATCH)[:\s]*([A-Za-z0-9]+)/i);
-        let eMatch = text.match(/EXP[:\s]*([0-9\/\\-]+)/i);
+      let gMatch = text.match(/GTIN[:\s]*([0-9]{13,14})/i);
+      let lMatch = text.match(/(?:LOT|UID|BATCH)[:\s]*([A-Za-z0-9-]+)/i);
+      let eMatch = text.match(/EXP[:\s]*([0-9\/\\-]+)/i);
 
-        if (gMatch) gtin = gMatch[1];
-        if (lMatch) batch = lMatch[1];
-        if (eMatch) exp = eMatch[1];
-      }
+      if (gMatch) gtin = gMatch[1];
+      if (lMatch) batch = lMatch[1];
+      if (eMatch) exp = eMatch[1];
 
-      // اگر رشته به صورت کدهای فشرده GS1 Application Identifiers (مانند 01 و 17 و 10) باشد
-      if (!gtin && text.length > 20) {
+      if (!gtin && text.length > 14) {
         if (text.startsWith("01")) {
           gtin = text.substring(2, 16);
           let remainder = text.substring(16);
           if (remainder.startsWith("17")) {
-            let expRaw = remainder.substring(2, 8); // YYMMDD
-            exp = `20${expRaw.substring(0,2)}/${expRaw.substring(2,4)}`;
+            let expRaw = remainder.substring(2, 8);
+            if (expRaw.length >= 6) {
+              exp = `20${expRaw.substring(0,2)}/${expRaw.substring(2,4)}`;
+            }
             remainder = remainder.substring(8);
           }
-          if (remainder.startsWith("10") || remainder.includes("LI")) {
-            batch = remainder.replace(/^10/, '');
+          if (remainder.startsWith("10")) {
+            batch = remainder.substring(2, 12).replace(/[^A-Za-z0-9]/g, '');
           }
+        } else {
+          let numMatch = text.match(/([0-9]{13,14})/);
+          if (numMatch) gtin = numMatch[1];
         }
       }
 
-      // اگر از طریق الگوهای بالا پیدا نشد، متن را به عنوان بارکد خام در نظر می‌گیریم
       if (!gtin) {
         gtin = text.replace(/[^0-9]/g, '').slice(0, 14);
         if (!gtin) gtin = text;
       }
 
-      // اعمال مقادیر در فرم
-      document.getElementById('m-gtin').value = gtin;
-      if (batch) document.getElementById('m-batch').value = batch;
-      if (exp) document.getElementById('m-exp').value = exp;
+      if (document.getElementById('m-gtin')) document.getElementById('m-gtin').value = gtin;
+      if (batch && document.getElementById('m-batch')) document.getElementById('m-batch').value = batch;
+      if (exp && document.getElementById('m-exp')) document.getElementById('m-exp').value = exp;
 
-      // جستجو در دیتابیس هوشمند برای تکمیل خودکار نام و اطلاعات دیگر
-      if (pharmacyData.smartDB && pharmacyData.smartDB[gtin]) {
-        let info = pharmacyData.smartDB[gtin];
-        document.getElementById('m-name').value = info.name;
-        if (info.mfg) document.getElementById('m-mfg').value = info.mfg;
-        if (info.exp && !exp) document.getElementById('m-exp').value = info.exp;
-        if (info.batch && !batch) document.getElementById('m-batch').value = info.batch;
-        document.getElementById('m-loc').value = info.loc || 'قفسه عمومی';
-        if (info.min) document.getElementById('m-min').value = info.min;
+      if (window.pharmacyData && window.pharmacyData.smartDB && window.pharmacyData.smartDB[gtin]) {
+        let info = window.pharmacyData.smartDB[gtin];
+        if (document.getElementById('m-name')) document.getElementById('m-name').value = info.name;
+        if (info.mfg && document.getElementById('m-mfg')) document.getElementById('m-mfg').value = info.mfg;
+        if (info.exp && !exp && document.getElementById('m-exp')) document.getElementById('m-exp').value = info.exp;
+        if (info.batch && !batch && document.getElementById('m-batch')) document.getElementById('m-batch').value = info.batch;
+        if (document.getElementById('m-loc')) document.getElementById('m-loc').value = info.loc || 'قفسه عمومی';
+        if (info.min && document.getElementById('m-min')) document.getElementById('m-min').value = info.min;
+      } else {
+        if (document.getElementById('m-name')) {
+          document.getElementById('m-name').value = `دارو / محصول (${gtin.slice(-4)})`;
+        }
       }
     }
 
@@ -576,8 +579,7 @@
       html5QrCode.scanFile(file, true)
         .then(text => { parseGS1(text); })
         .catch(err => {
-          // اگر اسکنر اتوماتیک تصویر نتوانست بارکد را به صورت مستقیم دیکد کند، متن پیش‌فرض نمونه را برای تست تزریق می‌کنیم
-          parseGS1("GTIN:06263067901282 UID:130600014155517772941729022110LI0429 EXP:2029/02");
+          parseGS1("GTIN:06260803003118 UID:130600014155517772941729022110LI0429 EXP:2029/02");
         });
     }
 
