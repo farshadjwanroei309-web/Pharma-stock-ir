@@ -13,44 +13,40 @@
             background: radial-gradient(circle at top, #1e1b4b, #0f172a, #020617);
             color: #f8fafc;
             min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
         }
-        /* افکت‌های نئونی و شیشه‌ای مدرن */
         .glass-card {
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            box-shadow: 0 0 25px rgba(14, 165, 233, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.6);
         }
         .neon-input:focus {
             border-color: #38bdf8;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
         }
         .neon-btn {
             background: linear-gradient(135deg, #0284c7, #2563eb);
             box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
             transition: all 0.3s ease;
         }
-        .neon-btn:hover {
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
-            transform: translateY(-1px);
-        }
         .neon-reg-btn {
             background: linear-gradient(135deg, #059669, #10b981);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
             transition: all 0.3s ease;
         }
-        .neon-reg-btn:hover {
-            box-shadow: 0 0 25px rgba(52, 211, 153, 0.6);
-            transform: translateY(-1px);
-        }
     </style>
 </head>
-<body class="flex items-center justify-center p-4">
+<body>
 
     <!-- کانتینر اصلی اپلیکیشن -->
-    <div id="app" class="w-full max-w-md glass-card rounded-3xl p-6 relative overflow-hidden">
+    <div id="app" class="w-full max-w-md glass-card rounded-3xl p-6 relative">
         
-        <!-- هدر برنامه با آیکون نئونی -->
+        <!-- هدر برنامه -->
         <div class="text-center mb-6">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-sky-500/10 text-sky-400 rounded-2xl mb-3 border border-sky-500/30 shadow-[0_0_15px_rgba(56,189,248,0.2)] text-3xl">
                 💊
@@ -63,14 +59,14 @@
         <div id="login-view" class="space-y-4">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">شماره موبایل یا آیدی کاربری:</label>
-                <input type="text" id="login-user" placeholder="مثال: 09123456789 یا farshad_admin" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="login-user" placeholder="مثال: 09123456789 یا farshad_admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
 
             <!-- فیلد رمز عبور با دکمه چشم باز و بسته -->
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">رمز عبور:</label>
                 <div class="relative">
-                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
                     <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-sky-400 text-base focus:outline-none transition">
                         👁️
                     </button>
@@ -91,24 +87,24 @@
         <div id="register-view" class="space-y-3.5 hidden">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">نام داروخانه / مرکز:</label>
-                <input type="text" id="reg-pharmacy" placeholder="مثال: داروخانه دکتر مجیدی" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-pharmacy" placeholder="مثال: داروخانه دکتر مجیدی" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">نام مدیر کل:</label>
-                <input type="text" id="reg-manager" placeholder="نام و نام خانوادگی مدیر" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-manager" placeholder="نام و نام خانوادگی مدیر" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">شماره موبایل مدیر:</label>
-                <input type="text" id="reg-mobile" placeholder="09123456789" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-mobile" placeholder="09123456789" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">آیدی یکتا جهت ورود:</label>
-                <input type="text" id="reg-username" placeholder="فقط حروف انگلیسی (مثال: farshad_j)" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-username" placeholder="فقط حروف انگلیسی (مثال: farshad_j)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">رمز عبور مدیر:</label>
                 <div class="relative">
-                    <input type="password" id="reg-pass" placeholder="حداقل 8 کاراکتر (خاص، حرف و عدد)" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                    <input type="password" id="reg-pass" placeholder="حداقل 8 کاراکتر" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
                     <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 text-base focus:outline-none transition">👁️</button>
                 </div>
             </div>
@@ -124,7 +120,7 @@
 
         <!-- پنل اصلی مدیریت (Dashboard View - بعد از ورود موفق) -->
         <div id="dashboard-view" class="hidden space-y-4">
-            <div class="bg-slate-900/90 p-4 rounded-2xl border border-sky-500/30 flex items-center justify-between shadow-[0_0_15px_rgba(56,189,248,0.1)]">
+            <div class="bg-slate-900 p-4 rounded-2xl border border-sky-500/30 flex items-center justify-between shadow-md">
                 <div>
                     <h2 id="lbl-pharmacy-name" class="text-sm font-bold text-white">داروخانه</h2>
                     <p id="lbl-manager-info" class="text-xs text-sky-400 mt-0.5">مدیر کل: -</p>
@@ -134,7 +130,7 @@
 
             <div class="bg-sky-500/10 border border-sky-500/30 p-4 rounded-2xl text-center space-y-3">
                 <p class="text-xs text-sky-300">انبار اختصاصی شما آماده است و امنیت ایزوله برقرار شد.</p>
-                <button onclick="alert('بخش اسکنر بارکد و مدیریت انبار در گام بعدی اضافه خواهد شد.')" class="w-full neon-btn text-white text-xs font-medium py-3 rounded-xl transition">
+                <button onclick="alert('بخش اسکنر بارکد و مدیریت انبار در گام بعدی به این بخش اضافه خواهد شد.')" class="w-full neon-btn text-white text-xs font-medium py-3 rounded-xl transition">
                     📷 ورود به بخش اسکنر هوشمند و انبارداری
                 </button>
             </div>
@@ -143,7 +139,6 @@
     </div>
 
     <script>
-        // دیتابیس محلی موقت جهت تست یکتا بودن و ورود
         let registeredPharmacies = JSON.parse(localStorage.getItem('ph_db') || '[]');
 
         function switchView(viewId) {
@@ -153,7 +148,6 @@
             document.getElementById(viewId).classList.remove('hidden');
         }
 
-        // دکمه چشم باز و بسته برای رمز عبور
         function togglePassword(fieldId, btn) {
             const passInput = document.getElementById(fieldId);
             if (passInput.type === 'password') {
@@ -165,7 +159,6 @@
             }
         }
 
-        // منطق ثبت‌نام با بررسی یکتا بودن موبایل یا آیدی
         function handleRegister() {
             const pharmacy = document.getElementById('reg-pharmacy').value.trim();
             const manager = document.getElementById('reg-manager').value.trim();
@@ -178,23 +171,19 @@
                 return;
             }
 
-            // بررسی تکراری نبودن موبایل یا آیدی
             const exists = registeredPharmacies.some(p => p.mobile === mobile || p.username === username);
             if (exists) {
                 alert('خطا: این شماره موبایل یا آیدی کاربری قبلاً در سیستم ثبت شده است!');
                 return;
             }
 
-            // ذخیره اطلاعات جدید
-            const newPharmacy = { pharmacy, manager, mobile, username, pass };
-            registeredPharmacies.push(newPharmacy);
+            registeredPharmacies.push({ pharmacy, manager, mobile, username, pass });
             localStorage.setItem('ph_db', JSON.stringify(registeredPharmacies));
 
             alert('انبار اختصاصی با موفقیت ساخته شد. حالا می‌توانید وارد شوید.');
             switchView('login-view');
         }
 
-        // منطق ورود (پشتیبانی از ورود با موبایل یا آیدی)
         function handleLogin() {
             const userInput = document.getElementById('login-user').value.trim();
             const passInput = document.getElementById('login-pass').value.trim();
@@ -204,7 +193,6 @@
                 return;
             }
 
-            // جستجو در بین داروخانه‌های ثبت‌نام شده
             const found = registeredPharmacies.find(p => (p.mobile === userInput || p.username === userInput) && p.pass === passInput);
 
             if (found) {
@@ -212,7 +200,6 @@
                 document.getElementById('lbl-manager-info').innerText = "مدیر کل: " + found.manager + " (" + found.mobile + ")";
                 switchView('dashboard-view');
             } else {
-                // تست ادمین پیش‌فرض برای راحتی تست شما
                 if ((userInput === 'farshad_admin' || userInput === '09123456789') && passInput === 'Farshad@8') {
                     document.getElementById('lbl-pharmacy-name').innerText = "داروخانه مرکزی (پیش‌فرض)";
                     document.getElementById('lbl-manager-info').innerText = "مدیر کل: فرشاد (09123456789)";
