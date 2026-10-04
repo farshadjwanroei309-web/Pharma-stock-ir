@@ -20,7 +20,7 @@
             padding: 16px;
         }
         .glass-card {
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(56, 189, 248, 0.25);
             box-shadow: 0 0 40px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.7);
@@ -61,11 +61,11 @@
                 💊
             </div>
             <h1 class="text-xl font-bold text-white tracking-wide">سامانه انبارداری پیشرفته</h1>
-            <p class="text-xs text-sky-300/70 mt-1">مدیریت هوشمند دارو و کالاپزشکی</p>
+            <p class="text-xs text-sky-300/70 mt-1">ویژه داروخانه‌ها و مراکز کالاپزشکی</p>
         </div>
 
-        <!-- 1. فرم ورود (پیش‌فرض نمایش داده می‌شود) -->
-        <div id="login-view" class="space-y-4">
+        <!-- 1. فرم ورود -->
+        <div id="login-view" style="display: block;" class="space-y-4">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">شماره موبایل یا آیدی کاربری:</label>
                 <input type="text" id="login-user" placeholder="مثال: 09123456789" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
@@ -81,7 +81,7 @@
 
             <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
                 <button type="button" onclick="switchView('register-view')" class="text-sky-400 hover:text-sky-300 font-medium transition">ثبت‌نام داروخانه / کالاپزشکی</button>
-                <a href="#" onclick="alert('بازیابی رمز عبور از طریق شماره موبایل مدیر امکان‌پذیر است.')" class="hover:text-slate-300 transition">فراموشی رمز عبور؟</a>
+                <a href="#" onclick="alert('بازیابی رمز عبور از طریق شماره موبایل مدیر انجام می‌شود.')" class="hover:text-slate-300 transition">فراموشی رمز عبور؟</a>
             </div>
 
             <button type="button" onclick="handleLogin()" class="w-full neon-btn text-white font-medium py-3 rounded-xl transition mt-2">
@@ -89,8 +89,8 @@
             </button>
         </div>
 
-        <!-- 2. فرم ثبت‌نام پیشرفته (در ابتدا مخفی) -->
-        <div id="register-view" class="space-y-3.5 hidden">
+        <!-- 2. فرم ثبت‌نام پیشرفته -->
+        <div id="register-view" style="display: none;" class="space-y-3.5">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">نام داروخانه / مرکز:</label>
                 <input type="text" id="reg-pharmacy" placeholder="مثال: داروخانه دکتر مجیدی" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
@@ -100,7 +100,7 @@
                 <input type="text" id="reg-manager" placeholder="نام و نام خانوادگی مدیر" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">شماره موبایل مدیر:</label>
+                <label class="block text-xs font-medium text-slate-300 mb-1">شماره موبایل مدیر (جهت بازیابی):</label>
                 <input type="text" id="reg-mobile" placeholder="09123456789" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
@@ -131,8 +131,8 @@
             </div>
         </div>
 
-        <!-- 3. داشبورد ایزوله اختصاصی (در ابتدا مخفی) -->
-        <div id="dashboard-view" class="space-y-4 hidden">
+        <!-- 3. داشبورد ایزوله اختصاصی -->
+        <div id="dashboard-view" style="display: none;" class="space-y-4">
             <div class="bg-slate-900/90 p-4 rounded-2xl border border-sky-500/30 flex items-center justify-between shadow-lg">
                 <div>
                     <h2 id="lbl-pharmacy-name" class="text-sm font-bold text-white">نام داروخانه</h2>
@@ -144,9 +144,9 @@
             <div class="bg-sky-500/10 border border-sky-500/30 p-5 rounded-2xl text-center space-y-3 shadow-inner">
                 <div class="text-2xl">🔒</div>
                 <h3 class="text-sm font-bold text-white">امنیت ایزوله انبار برقرار شد</h3>
-                <p class="text-xs text-sky-300/80 leading-relaxed">اطلاعات این انبار کاملاً مختص مرکز شماست. گام اول با موفقیت پیاده‌سازی شد.</p>
-                <button type="button" onclick="alert('پس از تایید شما، در قدم بعدی بخش ثبت دارو و هشدار انقضای ۳۰ روزه به اینجا اضافه خواهد شد.')" class="w-full neon-btn text-white text-xs font-medium py-3 rounded-xl">
-                    📦 ورود به مدیریت انبار و اقلام (بخش بعدی)
+                <p class="text-xs text-sky-300/80 leading-relaxed">اطلاعات این انبار کاملاً مختص مرکز شماست. ساختار صفحات کاملاً منظم و تفکیک شد.</p>
+                <button type="button" onclick="alert('بخش بعدی (مدیریت انبار، اقلام و هشدار ۳۰ روزه) آماده الحاق است.')" class="w-full neon-btn text-white text-xs font-medium py-3 rounded-xl">
+                    📦 بخش مدیریت انبار و محصولات
                 </button>
             </div>
         </div>
@@ -157,10 +157,11 @@
         let registeredPharmacies = JSON.parse(localStorage.getItem('ph_db') || '[]');
 
         function switchView(viewId) {
-            document.getElementById('login-view').classList.add('hidden');
-            document.getElementById('register-view').classList.add('hidden');
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById(viewId).classList.remove('hidden');
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'none';
+            
+            document.getElementById(viewId).style.display = 'block';
         }
 
         function togglePassword(fieldId, btn) {
@@ -260,7 +261,7 @@
                 switchView('dashboard-view');
             } else {
                 // اکانت تست پیش‌فرض
-                if ((userInput === 'farshad_admin' || userInput === '09123456789') && passInput === 'Farshad@8') {
+                if ((userInput === 'farshad_admin8' || userInput === '0914912575') && passInput === 'Farshad@8') {
                     document.getElementById('lbl-pharmacy-name').innerText = "داروخانه مرکزی (تست)";
                     document.getElementById('lbl-manager-info').innerText = "مدیر کل: فرشاد";
                     switchView('dashboard-view');
