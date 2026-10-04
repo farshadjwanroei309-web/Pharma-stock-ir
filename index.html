@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap');
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background: radial-gradient(circle at top, #1e1b4b, #0f172a, #020617);
+            background: radial-gradient(circle at top, #0f172a, #020617);
             color: #f8fafc;
             min-height: 100vh;
             margin: 0;
@@ -21,117 +21,133 @@
         }
         .glass-card {
             background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(56, 189, 248, 0.25);
-            box-shadow: 0 0 30px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.7);
         }
         .neon-input:focus {
             border-color: #38bdf8;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
         }
         .neon-btn {
             background: linear-gradient(135deg, #0284c7, #2563eb);
-            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
             transition: all 0.3s ease;
+        }
+        .neon-btn:active {
+            transform: scale(0.98);
         }
         .neon-reg-btn {
             background: linear-gradient(135deg, #059669, #10b981);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
             transition: all 0.3s ease;
+        }
+        /* مخفی کردن اسکرول‌بار اما قابل اسکرول بودن */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body>
+<body class="no-scrollbar">
 
-    <!-- کانتینر اصلی اپلیکیشن -->
-    <div id="app" class="w-full max-w-md glass-card rounded-3xl p-6 relative">
+    <div class="w-full max-w-md glass-card rounded-3xl p-6 relative my-auto">
         
-        <!-- هدر برنامه -->
+        <!-- هدر سیستم -->
         <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-sky-500/10 text-sky-400 rounded-2xl mb-3 border border-sky-500/30 shadow-[0_0_15px_rgba(56,189,248,0.2)] text-3xl">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-sky-500/10 text-sky-400 rounded-2xl mb-3 border border-sky-500/30 shadow-[0_0_20px_rgba(56,189,248,0.2)] text-3xl">
                 💊
             </div>
             <h1 class="text-xl font-bold text-white tracking-wide">سامانه انبارداری پیشرفته</h1>
-            <p class="text-xs text-sky-300/70 mt-1">مدیریت هوشمند دارو و تجهیزات پزشکی</p>
+            <p class="text-xs text-sky-300/70 mt-1">ویژه داروخانه‌ها و مراکز کالاپزشکی</p>
         </div>
 
-        <!-- فرم ورود (Login View) -->
+        <!-- 1. فرم ورود -->
         <div id="login-view" class="space-y-4">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">شماره موبایل یا آیدی کاربری:</label>
-                <input type="text" id="login-user" placeholder="مثال: 09123456789 یا farshad_admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="login-user" placeholder="مثال: 09123456789" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
 
-            <!-- فیلد رمز عبور با دکمه چشم باز و بسته -->
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5">رمز عبور:</label>
                 <div class="relative">
-                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
-                    <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-sky-400 text-base focus:outline-none transition">
-                        👁️
-                    </button>
+                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                    <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-sky-400 focus:outline-none transition">👁️</button>
                 </div>
             </div>
 
             <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
-                <a href="#" onclick="switchView('register-view')" class="text-sky-400 hover:text-sky-300 transition font-medium">ثبت‌نام داروخانه / کالاپزشکی</a>
-                <a href="#" class="hover:text-slate-300 transition">فراموشی رمز عبور؟</a>
+                <button type="button" onclick="switchView('register-view')" class="text-sky-400 hover:text-sky-300 font-medium transition">ثبت‌نام داروخانه / کالاپزشکی</button>
+                <a href="#" onclick="alert('بازیابی رمز عبور از طریق شماره موبایل مدیر انجام می‌شود.')" class="hover:text-slate-300 transition">فراموشی رمز عبور؟</a>
             </div>
 
-            <button onclick="handleLogin()" class="w-full neon-btn text-white font-medium py-3 rounded-xl transition mt-2">
+            <button type="button" onclick="handleLogin()" class="w-full neon-btn text-white font-medium py-3 rounded-xl transition mt-2">
                 ورود به سیستم
             </button>
         </div>
 
-        <!-- فرم ثبت‌نام مدیر کل (Register View - مخفی به صورت پیش‌فرض) -->
+        <!-- 2. فرم ثبت‌نام پیشرفته -->
         <div id="register-view" class="space-y-3.5 hidden">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">نام داروخانه / مرکز:</label>
-                <input type="text" id="reg-pharmacy" placeholder="مثال: داروخانه دکتر مجیدی" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-pharmacy" placeholder="مثال: داروخانه دکتر مجیدی" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">نام مدیر کل:</label>
-                <input type="text" id="reg-manager" placeholder="نام و نام خانوادگی مدیر" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-manager" placeholder="نام و نام خانوادگی مدیر" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">شماره موبایل مدیر:</label>
-                <input type="text" id="reg-mobile" placeholder="09123456789" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <label class="block text-xs font-medium text-slate-300 mb-1">شماره موبایل مدیر (جهت بازیابی):</label>
+                <input type="text" id="reg-mobile" placeholder="09123456789" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">آیدی یکتا جهت ورود:</label>
-                <input type="text" id="reg-username" placeholder="فقط حروف انگلیسی (مثال: farshad_j)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                <input type="text" id="reg-username" placeholder="فقط حروف انگلیسی (مثال: farshad_admin)" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
             </div>
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">رمز عبور مدیر:</label>
                 <div class="relative">
-                    <input type="password" id="reg-pass" placeholder="حداقل 8 کاراکتر" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
-                    <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 text-base focus:outline-none transition">👁️</button>
+                    <input type="password" id="reg-pass" oninput="checkPasswordStrength(this.value)" placeholder="حداقل 8 کاراکتر با حروف و عدد" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none neon-input transition">
+                    <button type="button" onclick="togglePassword('reg-pass', this)" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 focus:outline-none transition">👁️</button>
+                </div>
+                <!-- باکس راهنمای اعتبارسنجی رمز عبور -->
+                <div class="mt-2 p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 text-[11px] space-y-1 text-slate-400">
+                    <div id="rule-length" class="flex items-center gap-1.5">❌ حداقل ۸ کاراکتر</div>
+                    <div id="rule-upper" class="flex items-center gap-1.5">❌ شامل حرف بزرگ انگلیسی (A-Z)</div>
+                    <div id="rule-lower" class="flex items-center gap-1.5">❌ شامل حرف کوچک انگلیسی (a-z)</div>
+                    <div id="rule-number" class="flex items-center gap-1.5">❌ شامل عدد یا کاراکتر خاص (!@#$...)</div>
                 </div>
             </div>
 
-            <button onclick="handleRegister()" class="w-full neon-reg-btn text-white font-medium py-3 rounded-xl transition mt-2">
+            <button type="button" onclick="handleRegister()" class="w-full neon-reg-btn text-white font-medium py-3 rounded-xl transition mt-2">
                 تایید و ایجاد انبار اختصاصی
             </button>
             
             <div class="text-center pt-2">
-                <a href="#" onclick="switchView('login-view')" class="text-xs text-slate-400 hover:text-white transition">بازگشت به صفحه ورود</a>
+                <button type="button" onclick="switchView('login-view')" class="text-xs text-slate-400 hover:text-white transition">بازگشت به صفحه ورود</button>
             </div>
         </div>
 
-        <!-- پنل اصلی مدیریت (Dashboard View - بعد از ورود موفق) -->
-        <div id="dashboard-view" class="hidden space-y-4">
-            <div class="bg-slate-900 p-4 rounded-2xl border border-sky-500/30 flex items-center justify-between shadow-md">
+        <!-- 3. داشبورد ایزوله اختصاصی -->
+        <div id="dashboard-view" class="space-y-4 hidden">
+            <div class="bg-slate-900/90 p-4 rounded-2xl border border-sky-500/30 flex items-center justify-between shadow-lg">
                 <div>
-                    <h2 id="lbl-pharmacy-name" class="text-sm font-bold text-white">داروخانه</h2>
+                    <h2 id="lbl-pharmacy-name" class="text-sm font-bold text-white">نام داروخانه</h2>
                     <p id="lbl-manager-info" class="text-xs text-sky-400 mt-0.5">مدیر کل: -</p>
                 </div>
-                <button onclick="handleLogout()" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs transition">خروج</button>
+                <button type="button" onclick="handleLogout()" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs transition">خروج</button>
             </div>
 
-            <div class="bg-sky-500/10 border border-sky-500/30 p-4 rounded-2xl text-center space-y-3">
-                <p class="text-xs text-sky-300">انبار اختصاصی شما آماده است و امنیت ایزوله برقرار شد.</p>
-                <button onclick="alert('بخش اسکنر بارکد و مدیریت انبار در گام بعدی به این بخش اضافه خواهد شد.')" class="w-full neon-btn text-white text-xs font-medium py-3 rounded-xl transition">
-                    📷 ورود به بخش اسکنر هوشمند و انبارداری
+            <div class="bg-sky-500/10 border border-sky-500/30 p-5 rounded-2xl text-center space-y-3 shadow-inner">
+                <div class="text-2xl">🔒</div>
+                <h3 class="text-sm font-bold text-white">امنیت ایزوله انبار برقرار شد</h3>
+                <p class="text-xs text-sky-300/80 leading-relaxed">اطلاعات این انبار کاملاً مختص مرکز شماست. در قدم بعدی بخش اسکنر بارکد و مدیریت موجودی با هشدار انقضای ۳۰ روزه به این بخش متصل خواهد شد.</p>
+                <button type="button" onclick="alert('بخش بعدی (اسکنر و ثبت دارو) آماده‌سازی شده و در آپدیت بعدی اضافه می‌شود.')" class="w-full neon-btn text-white text-xs font-medium py-3 rounded-xl">
+                    📷 ورود به بخش اسکنر هوشمند انبار
                 </button>
             </div>
         </div>
@@ -139,6 +155,7 @@
     </div>
 
     <script>
+        // دیتابیس محلی برای ذخیره داروخانه‌ها
         let registeredPharmacies = JSON.parse(localStorage.getItem('ph_db') || '[]');
 
         function switchView(viewId) {
@@ -155,7 +172,51 @@
                 btn.innerText = '🙈';
             } else {
                 passInput.type = 'password';
-                btn.innerText = '👁️';
+                btn.innerText = '👁️️';
+            }
+        }
+
+        // اعتبارسنجی زنده رمز عبور
+        function checkPasswordStrength(pass) {
+            const ruleLength = document.getElementById('rule-length');
+            const ruleUpper = document.getElementById('rule-upper');
+            const ruleLower = document.getElementById('rule-lower');
+            const ruleNumber = document.getElementById('rule-number');
+
+            // بررسی طول
+            if (pass.length >= 8) {
+                ruleLength.innerHTML = '✔️ حداقل ۸ کاراکتر';
+                ruleLength.className = 'flex items-center gap-1.5 text-emerald-400 font-medium';
+            } else {
+                ruleLength.innerHTML = '❌ حداقل ۸ کاراکتر';
+                ruleLength.className = 'flex items-center gap-1.5 text-slate-400';
+            }
+
+            // بررسی حرف بزرگ
+            if (/[A-Z]/.test(pass)) {
+                ruleUpper.innerHTML = '✔️ شامل حرف بزرگ انگلیسی (A-Z)';
+                ruleUpper.className = 'flex items-center gap-1.5 text-emerald-400 font-medium';
+            } else {
+                ruleUpper.innerHTML = '❌ شامل حرف بزرگ انگلیسی (A-Z)';
+                ruleUpper.className = 'flex items-center gap-1.5 text-slate-400';
+            }
+
+            // بررسی حرف کوچک
+            if (/[a-z]/.test(pass)) {
+                ruleLower.innerHTML = '✔️ شامل حرف کوچک انگلیسی (a-z)';
+                ruleLower.className = 'flex items-center gap-1.5 text-emerald-400 font-medium';
+            } else {
+                ruleLower.innerHTML = '❌ شامل حرف کوچک انگلیسی (a-z)';
+                ruleLower.className = 'flex items-center gap-1.5 text-slate-400';
+            }
+
+            // بررسی عدد یا کاراکتر خاص
+            if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(pass)) {
+                ruleNumber.innerHTML = '✔️ شامل عدد یا کاراکتر خاص (!@#$...)';
+                ruleNumber.className = 'flex items-center gap-1.5 text-emerald-400 font-medium';
+            } else {
+                ruleNumber.innerHTML = '❌ شامل عدد یا کاراکتر خاص (!@#$...)';
+                ruleNumber.className = 'flex items-center gap-1.5 text-slate-400';
             }
         }
 
@@ -167,10 +228,17 @@
             const pass = document.getElementById('reg-pass').value.trim();
 
             if (!pharmacy || !manager || !mobile || !username || !pass) {
-                alert('لطفا تمام فیلدهای ثبت‌نام را کامل پر کنید.');
+                alert('لطفاً تمام فیلدهای ثبت‌نام را به دقت پر کنید.');
                 return;
             }
 
+            // بررسی قوانین سخت‌گیرانه رمز
+            if (pass.length < 8 || !/[A-Z]/.test(pass) || !/[a-z]/.test(pass) || !/[0-9!@#$%^&*(),.?":{}|<>]/.test(pass)) {
+                alert('رمز عبور انتخاب شده استانداردهای امنیتی لازم را ندارد.');
+                return;
+            }
+
+            // بررسی تکراری نبودن موبایل یا آیدی
             const exists = registeredPharmacies.some(p => p.mobile === mobile || p.username === username);
             if (exists) {
                 alert('خطا: این شماره موبایل یا آیدی کاربری قبلاً در سیستم ثبت شده است!');
@@ -180,7 +248,7 @@
             registeredPharmacies.push({ pharmacy, manager, mobile, username, pass });
             localStorage.setItem('ph_db', JSON.stringify(registeredPharmacies));
 
-            alert('انبار اختصاصی با موفقیت ساخته شد. حالا می‌توانید وارد شوید.');
+            alert('انبار اختصاصی با موفقیت ثبت شد. اکنون می‌توانید وارد شوید.');
             switchView('login-view');
         }
 
@@ -189,10 +257,11 @@
             const passInput = document.getElementById('login-pass').value.trim();
 
             if (!userInput || !passInput) {
-                alert('لطفا اطلاعات ورود را وارد کنید.');
+                alert('لطفاً اطلاعات ورود را وارد کنید.');
                 return;
             }
 
+            // بررسی در دیتابیس ثبت‌نام‌شده‌ها
             const found = registeredPharmacies.find(p => (p.mobile === userInput || p.username === userInput) && p.pass === passInput);
 
             if (found) {
@@ -200,13 +269,14 @@
                 document.getElementById('lbl-manager-info').innerText = "مدیر کل: " + found.manager + " (" + found.mobile + ")";
                 switchView('dashboard-view');
             } else {
+                // اکانت پیش‌فرض تست سریع
                 if ((userInput === 'farshad_admin' || userInput === '09123456789') && passInput === 'Farshad@8') {
-                    document.getElementById('lbl-pharmacy-name').innerText = "داروخانه مرکزی (پیش‌فرض)";
+                    document.getElementById('lbl-pharmacy-name').innerText = "داروخانه مرکزی (تست)";
                     document.getElementById('lbl-manager-info').innerText = "مدیر کل: فرشاد (09123456789)";
                     switchView('dashboard-view');
                     return;
                 }
-                alert('اطلاعات ورود اشتباه است یا کاربری با این مشخصات ثبت‌نام نکرده است.');
+                alert('اطلاعات ورود اشتباه است یا کاربری با این مشخصات یافت نشد.');
             }
         }
 
